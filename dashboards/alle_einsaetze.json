@@ -303,7 +303,7 @@
     },
     {
       "datasource": "${DS_POSTGRESQL}",
-      "description": "Wie oft wirklich im Einsatz",
+      "description": "Wie oft wirklich im Einsatz im ausgewählten Zeitraum",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -380,7 +380,7 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Eingesetzt Total",
+      "title": "Eingesetzt in Auswahl",
       "type": "stat"
     },
     {
@@ -974,5 +974,5 @@
   "timezone": "",
   "title": "Alle Einsätze",
   "uid": "l39T31YGz",
-  "version": 66
+  "version": 67
 }
