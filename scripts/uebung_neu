@@ -29,12 +29,14 @@ echo "Thema (Belüftung/FwDV3/TH/etc.): "
 read thema
 echo "Teilnahme (true/false) : "
 read teilnahme
+echo "Bemerkungen : "
+read bemerkungen
 
 # daten in db schreiben
 echo "Schreibe Datensatz.."
 echo "--------------------"
 psql $database $username << EOF
-INSERT INTO uebungen (nummer,start,ende,ort,thema,teilnahme) VALUES ('$nummer', '$datum $beginn', '$datum $ende', '$ort', '$thema', '$teilnahme');
+INSERT INTO uebungen (nummer,start,ende,ort,thema,teilnahme,bemerkungen) VALUES ('$nummer', '$datum $beginn', '$datum $ende', '$ort', '$thema', '$teilnahme', '$bemerkungen');
 EOF
 
 # geschriebene daten von db lesen

@@ -67,6 +67,7 @@ CREATE TABLE feuerwehr.uebungen (
     ort text,
     thema text,
     teilnahme boolean
+    bemerkungen text
 );
 
 
