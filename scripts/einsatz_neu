@@ -41,6 +41,7 @@ echo "Alarmierung z.B. Brennt PKW : "
 read alarmierung
 echo "Bemerkungen : "
 read bemerkungen
+echo ""
 
 # daten in db schreiben
 echo "Schreibe Datensatz.."

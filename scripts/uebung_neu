@@ -31,6 +31,7 @@ echo "Teilnahme (true/false) : "
 read teilnahme
 echo "Bemerkungen : "
 read bemerkungen
+echo ""
 
 # daten in db schreiben
 echo "Schreibe Datensatz.."

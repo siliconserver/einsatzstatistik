@@ -33,6 +33,7 @@ echo "Thema (Truppmann/AGT/Sprechfunker/etc.): "
 read thema
 echo "Bemerkungen : "
 read bemerkungen
+echo ""
 
 # daten in db schreiben
 echo "Schreibe Datensatz.."

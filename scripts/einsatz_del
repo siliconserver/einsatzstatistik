@@ -19,6 +19,7 @@ echo ""
 # einlesen der daten
 echo "Einsatz Nummer z.B. 104 : "
 read nummer
+echo ""
 
 # daten in db schreiben
 echo "Lösche Datensatz.."
