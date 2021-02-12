@@ -14,20 +14,32 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: feuerwehr; Type: SCHEMA; Schema: -; Owner: feuerwehr
+-- Name: feuerwehr; Type: SCHEMA; Schema: -; Owner: wurzelserver
 --
 
 CREATE SCHEMA feuerwehr;
 
-
-ALTER SCHEMA feuerwehr OWNER TO feuerwehr;
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: einsaetze; Type: TABLE; Schema: feuerwehr; Owner: feuerwehr
+-- Name: ausbildung; Type: TABLE; Schema: feuerwehr; Owner: wurzelserver
+--
+
+CREATE TABLE feuerwehr.ausbildung (
+    nummer integer,
+    start timestamp with time zone,
+    ende timestamp with time zone,
+    ort text,
+    thema text,
+    bemerkungen text
+);
+
+
+--
+-- Name: einsaetze; Type: TABLE; Schema: feuerwehr; Owner: wurzelserver
 --
 
 CREATE TABLE feuerwehr.einsaetze (
@@ -44,10 +56,8 @@ CREATE TABLE feuerwehr.einsaetze (
 );
 
 
-ALTER TABLE feuerwehr.einsaetze OWNER TO feuerwehr;
-
 --
--- Name: uebungen; Type: TABLE; Schema: feuerwehr; Owner: feuerwehr
+-- Name: uebungen; Type: TABLE; Schema: feuerwehr; Owner: wurzelserver
 --
 
 CREATE TABLE feuerwehr.uebungen (
@@ -58,26 +68,6 @@ CREATE TABLE feuerwehr.uebungen (
     thema text,
     teilnahme boolean
 );
-
-
-ALTER TABLE feuerwehr.uebungen OWNER TO feuerwehr;
-
---
--- Data for Name: einsaetze; Type: TABLE DATA; Schema: feuerwehr; Owner: feuerwehr
---
-
-COPY feuerwehr.einsaetze (nummer, start, ende, ort, art, funktion, eingesetzt, alarmierung, bemerkungen, einsatzmittel) FROM stdin;
-1	2021-02-01 13:37:00+01	2021-02-01 18:47:11+01	Musterstadt	Brand	TM	t	Feuer schlimm 12	Ganz schlimmes Feuer, heiss	HLF10
-\.
-
-
---
--- Data for Name: uebungen; Type: TABLE DATA; Schema: feuerwehr; Owner: feuerwehr
---
-
-COPY feuerwehr.uebungen (nummer, start, ende, ort, thema, teilnahme) FROM stdin;
-1	2021-02-01 18:00:00+01	2021-02-01 20:00:00+01	Musterort	Belüftung	t
-\.
 
 
 --

@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+
+echo "Letzte Ausbildung"
+echo "-------------"
+psql $database $username << EOF
+SELECT * FROM ausbildung ORDER BY nummer DESC LIMIT 1;
+EOF
+echo ""
+echo ""
+echo "Neue Ausbildung"
+echo "-------------"
+echo ""
+
+# einlesen der daten
+echo "Ausbildung Nummer z.B. 4 : "
+read nummer
+echo "Startdatum z.B. 2019-05-25 :"
+read beginn
+echo "Startzeit z.B. 04:57:17 :"
+read beginnzeit
+echo "Enddatum z.B. 2019-05-25 :"
+read ende
+echo "Endzeit z.B. 04:57:17 :"
+read endzeit
+echo "Ort z.B. Woerth :"
+read ort
+echo "Thema (Truppmann/AGT/Sprechfunker/etc.): "
+read thema
+echo "Bemerkungen : "
+read bemerkungen
+
+# daten in db schreiben
+echo "Schreibe Datensatz.."
+echo "--------------------"
+psql $database $username << EOF
+INSERT INTO ausbildung (nummer,start,ende,ort,thema,bemerkungen) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$thema', '$bemerkungen');
+EOF
+
+# geschriebene daten von db lesen
+echo "Fertiiiig. Guck, hier:"
+echo "----------------------"
+psql $database $username << EOF
+SELECT * FROM ausbildung WHERE nummer='$nummer';
+EOF

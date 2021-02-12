@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+
+echo "Letzte Ausbildung"
+echo "-------------"
+psql $database $username << EOF
+SELECT * FROM ausbildung ORDER BY nummer DESC LIMIT 1;
+EOF
+echo ""
+echo ""
+echo "Ausbildung entfernen"
+echo "-------------"
+echo ""
+
+# einlesen der daten
+echo "Ausbildung Nummer z.B. 4 : "
+read nummer
+
+# daten in db schreiben
+echo "Lösche Datensatz.."
+echo "--------------------"
+psql $database $username << EOF
+DELETE FROM ausbildung WHERE nummer='$nummer';
+EOF

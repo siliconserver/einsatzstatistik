@@ -1,32 +1,28 @@
 #!/bin/bash
 #
-# script by christian baumann
-# https://christian-baumann.net
-# https://gitlab.com/wurzelserver
-#
 # variablen
 hostname=localhost
-username=feuerwehr
+username=root
 database=feuerwehr
 
-echo "Letzte Übung"
+echo "Letzter Einsatz"
 echo "-------------"
 psql $database $username << EOF
-SELECT * FROM uebungen ORDER BY nummer DESC LIMIT 1;
+SELECT * FROM einsaetze ORDER BY nummer DESC LIMIT 1;
 EOF
 echo ""
 echo ""
-echo "Übung entfernen"
+echo "Einsatz löschen"
 echo "-------------"
 echo ""
 
 # einlesen der daten
-echo "Übung Nummer z.B. 4 : "
+echo "Einsatz Nummer z.B. 104 : "
 read nummer
 
 # daten in db schreiben
 echo "Lösche Datensatz.."
 echo "--------------------"
 psql $database $username << EOF
-DELETE FROM uebungen WHERE nummer='$nummer';
+DELETE FROM einsaetze WHERE nummer='$nummer';
 EOF

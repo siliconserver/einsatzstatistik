@@ -1,12 +1,8 @@
 #!/bin/bash
 #
-# script by christian baumann
-# https://christian-baumann.net
-# https://gitlab.com/wurzelserver
-#
 # variablen
 hostname=localhost
-username=feuerwehr
+username=root
 database=feuerwehr
 
 echo "Letzter Einsatz"
@@ -23,10 +19,14 @@ echo ""
 # einlesen der daten
 echo "Einsatz Nummer z.B. 104 : "
 read nummer
-echo "Beginn z.B. 2019-05-25 04:57:17 :"
+echo "Startdatum z.B. 2019-05-25 :"
 read beginn
-echo "Ende z.B. 2019-05-25 04:57:17 :"
+echo "Startzeit z.B. 04:57:17 :"
+read beginnzeit
+echo "Enddatum z.B. 2019-05-25 :"
 read ende
+echo "Endzeit z.B. 04:57:17 :"
+read endzeit
 echo "Ort z.B. Woerth :"
 read ort
 echo "Art des Einsatzes (Brand/TH/Gefahrstoffe/Dienstleistung): "
@@ -46,7 +46,7 @@ read bemerkungen
 echo "Schreibe Datensatz.."
 echo "--------------------"
 psql $database $username << EOF
-INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel) VALUES ('$nummer', '$beginn', '$ende', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel');
+INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel');
 EOF
 
 # geschriebene daten von db lesen

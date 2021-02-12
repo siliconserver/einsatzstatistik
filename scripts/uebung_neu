@@ -1,13 +1,11 @@
 #!/bin/bash
 #
-# script by christian baumann
-# https://christian-baumann.net
-# https://gitlab.com/wurzelserver
-#
 # variablen
 hostname=localhost
-username=feuerwehr
+username=root
 database=feuerwehr
+beginn=18:00:00
+ende=19:30:00
 
 echo "Letzte Übung"
 echo "-------------"
@@ -23,10 +21,8 @@ echo ""
 # einlesen der daten
 echo "Übung Nummer z.B. 4 : "
 read nummer
-echo "Beginn z.B. 2019-05-25 04:57:17 :"
-read beginn 
-echo "Ende z.B. 2019-05-25 04:57:17 :"
-read ende
+echo "Datum in ISO z.B. 2019-05-25 :"
+read datum 
 echo "Ort z.B. Woerth :"
 read ort
 echo "Thema (Belüftung/FwDV3/TH/etc.): "
@@ -38,7 +34,7 @@ read teilnahme
 echo "Schreibe Datensatz.."
 echo "--------------------"
 psql $database $username << EOF
-INSERT INTO uebungen (nummer,start,ende,ort,thema,teilnahme) VALUES ('$nummer', '$beginn', '$ende', '$ort', '$thema', '$teilnahme');
+INSERT INTO uebungen (nummer,start,ende,ort,thema,teilnahme) VALUES ('$nummer', '$datum $beginn', '$datum $ende', '$ort', '$thema', '$teilnahme');
 EOF
 
 # geschriebene daten von db lesen
