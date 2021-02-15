@@ -19,12 +19,10 @@ echo ""
 # einlesen der daten
 echo "Ausbildung Nummer z.B. 4 : "
 read nummer
-echo "Startdatum z.B. 2019-05-25 :"
-read beginn
+echo "Datum z.B. 2019-05-25 :"
+read datum
 echo "Startzeit z.B. 04:57:17 :"
 read beginnzeit
-echo "Enddatum z.B. 2019-05-25 :"
-read ende
 echo "Endzeit z.B. 04:57:17 :"
 read endzeit
 echo "Ort z.B. Woerth :"
@@ -39,7 +37,7 @@ echo ""
 echo "Schreibe Datensatz.."
 echo "--------------------"
 psql $database $username << EOF
-INSERT INTO ausbildung (nummer,start,ende,ort,thema,bemerkungen) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$thema', '$bemerkungen');
+INSERT INTO ausbildung (nummer,start,ende,ort,thema,bemerkungen) VALUES ('$nummer', '$datum $beginnzeit', '$datum $endzeit', '$ort', '$thema', '$bemerkungen');
 EOF
 
 # geschriebene daten von db lesen
