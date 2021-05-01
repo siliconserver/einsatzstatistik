@@ -19,36 +19,106 @@ echo ""
 # einlesen der daten
 echo "Einsatz Nummer z.B. 104 : "
 read nummer
+echo ""
 echo "Startdatum z.B. 2019-05-25 :"
 read beginn
+echo ""
 echo "Startzeit z.B. 04:57:17 :"
 read beginnzeit
+echo ""
 echo "Enddatum z.B. 2019-05-25 :"
 read ende
+echo ""
 echo "Endzeit z.B. 04:57:17 :"
 read endzeit
+echo ""
 echo "Ort z.B. Woerth :"
 read ort
+echo ""
 echo "Art des Einsatzes (Brand/TH/Gefahrstoffe/Dienstleistung): "
 read art
-echo "Funktion z.B. (FEZ, TM, AGT, MA) : "
-read funktion
-echo "Einsatzmittel z.B. (HLF20, DLK, FEZ) :"
-read einsatzmittel
-echo "Im Einsatz (true/false) : "
-read eingesetzt
+echo ""
+
+# auswahl Y/N ob im Einsatz
+while true; do
+	read -p "Im Einsatz? (Yy/Nn): " yn
+	case $yn in
+		[Yy]* ) eingesetzt="true"; break;;
+		[Nn]* ) eingesetzt="false"; break;;
+		* ) echo "Antwort mit Y oder N!.";;
+	esac
+done
+
+echo ""
+# nur dinge tun, wenn auch eingesetzt, sonst Bereitstellung befüllen
+if [[ $eingesetzt = true ]]
+	then
+	  echo "Funktion z.B. (FEZ, TM, AGT, MA) : "
+	  read funktion
+	  echo ""
+	    # wenn funktion FEZ Einsatzmittel mit FEZ ausfüllen
+	    if [[ $funktion = FEZ ]]
+	      then
+		einsatzmittel="FEZ"
+	      else
+		echo "Einsatzmittel z.B. (HLF20, DLK, FEZ) :"
+		read einsatzmittel
+	    fi
+	else
+		funktion="In Bereitstellung"
+		einsatzmittel="In Bereitstellung"
+fi
+
+# agt abfrage
+if [[ $funktion = AGT ]]
+        then
+	  while true; do
+      	  	read -p "Angeschnauft? (Yy/Nn): " ang
+	  	case $ang in
+		  	[Yy]* ) angeschnauft="true"; break;;
+		  	[Nn]* ) angeschnauft="false"; break;;
+	  	esac
+	  done
+fi
+
+# angeschnauft abfrage geraeteart
+if [[ $angeschnauft = true ]]
+	then
+	echo "Geräteart? (PA/Filter): "
+	read agt
+fi
+
+echo ""
 echo "Alarmierung z.B. Brennt PKW : "
 read alarmierung
+echo ""
 echo "Bemerkungen : "
 read bemerkungen
+echo ""
 echo ""
 
 # daten in db schreiben
 echo "Schreibe Datensatz.."
 echo "--------------------"
+if [[ $funktion = AGT ]]
+then
+psql $database $username << EOF
+INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel,angeschnauft,agt) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel', '$angeschnauft', '$agt');
+EOF
+else
 psql $database $username << EOF
 INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel');
 EOF
+fi
+
+# null von agt korrigieren
+if [[ $angeschnauft = false ]]
+	then
+	  psql $database $username << EOF
+          UPDATE einsaetze SET "agt"=NULL WHERE "nummer"='$nummer'; 
+EOF
+fi
+
 
 # geschriebene daten von db lesen
 echo "Fertiiiig. Guck, hier:"
