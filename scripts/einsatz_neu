@@ -5,11 +5,10 @@ hostname=localhost
 username=root
 database=feuerwehr
 
+echo ""
 echo "Letzter Einsatz"
 echo "-------------"
-psql $database $username << EOF
-SELECT * FROM einsaetze ORDER BY nummer DESC LIMIT 1;
-EOF
+psql -A -d $database -U $username -c "SELECT * FROM einsaetze ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Neuer Einsatz"
@@ -35,10 +34,33 @@ echo ""
 echo "Ort z.B. Woerth :"
 read ort
 echo ""
-echo "Art des Einsatzes (Brand/TH/Gefahrstoffe/Dienstleistung): "
-read art
-echo ""
 
+echo "Art des Einsatzes: "
+PS3='Bitte auswählen: '
+options=("Brand" "TH" "Gefahrstoffe" "Dienstleistung")
+select art in "${options[@]}"
+do
+    case $art in
+        "Brand")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "TH")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "Gefahrstoffe")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "Dienstleistung")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;            
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
+echo ""
 # auswahl Y/N ob im Einsatz
 while true; do
 	read -p "Im Einsatz? (Yy/Nn): " yn
@@ -53,22 +75,91 @@ echo ""
 # nur dinge tun, wenn auch eingesetzt, sonst Bereitstellung befüllen
 if [[ $eingesetzt = true ]]
 	then
-	  echo "Funktion z.B. (FEZ, TM, AGT, MA) : "
-	  read funktion
+		#funktion
+		echo "Funktion im Einsatz: "
+		PS3='Bitte auswählen: '
+		options=("TM" "AGT" "FEZ" "MA" "GF" "EL")
+		select funktion in "${options[@]}"
+		do
+			case $funktion in
+				"TM")
+					echo "Du hast $funktion ausgewählt."
+					break
+					;;
+				"AGT")
+					echo "Du hast $funktion ausgewählt."
+					break
+					;;
+				"FEZ")
+					echo "Du hast $funktion ausgewählt."
+					break
+					;;
+				"MA")
+					echo "Du hast $funktion ausgewählt."
+					break
+					;;            
+				"GF")
+					echo "Du hast $funktion ausgewählt."
+					break
+					;;            
+				"EL")
+					echo "Du hast $funktion ausgewählt."
+					break
+					;;            
+				*) echo "Ungültige Option: $REPLY";;
+			esac
+		done
 	  echo ""
 	    # wenn funktion FEZ Einsatzmittel mit FEZ ausfüllen
 	    if [[ $funktion = FEZ ]]
 	      then
 		einsatzmittel="FEZ"
 	      else
-		echo "Einsatzmittel z.B. (HLF20, DLK, FEZ) :"
-		read einsatzmittel
+			#einsatzmittel
+			echo "Einsatzmittel im Einsatz: "
+			PS3='Bitte auswählen: '
+			options=("HLF20" "HLF10" "DLK" "MTF" "WLF" "ELW" "GW-Mess")
+			select einsatzmittel in "${options[@]}"
+			do
+				case $einsatzmittel in
+					"HLF20")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;
+					"HLF10")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;
+					"DLK")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;
+					"MTF")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;            
+					"WLF")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;            
+					"ELW")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;            
+					"GW-Mess")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;            
+					*) echo "Ungültige Option: $REPLY";;
+				esac
+			done
 	    fi
 	else
 		funktion="In Bereitstellung"
 		einsatzmittel="In Bereitstellung"
 fi
 
+echo ""
 # agt abfrage
 if [[ $funktion = AGT ]]
         then
@@ -84,45 +175,289 @@ fi
 # angeschnauft abfrage geraeteart
 if [[ $angeschnauft = true ]]
 	then
-	echo "Geräteart? (PA/Filter): "
-	read agt
+		#agt
+		echo "Geräteart im Einsatz: "
+		PS3='Bitte auswählen: '
+		options=("PA" "Filter")
+		select agt in "${options[@]}"
+		do
+			case $agt in
+				"PA")
+					echo "Du hast $agt ausgewählt."
+					break
+					;;
+				"Filter")
+					echo "Du hast $agt ausgewählt."
+					break
+					;;
+				*) echo "Ungültige Option: $REPLY";;
+			esac
+		done
 fi
 
 echo ""
-echo "Alarmierung z.B. Brennt PKW : "
-read alarmierung
+# abfrage einsatzstichwort je nach einsatzart gruppiert
+if [[ $art == "Brand" ]]
+	then
+		#alarmierungbrand
+		echo "Einsatzstichwort: "
+		PS3='Bitte auswählen: '
+		options=("Balkonbrand" "BMA Alarm" "Brand Allgemein" "Dachstuhlbrand" "Flächenbrand groß" "Flächenbrand klein" "Gartenhausbrand" "Gebäudebrand" "Grillbrand" "Holzstapelbrand" "Kaminbrand" "Kellerbrand" "LKW Brand" "Mülleimerbrand" "PKW Brand" "Privater Rauchmelder" "Rauchentwicklung im Freien unklar" "Rauchentwicklung im Gebäude unklar")
+		select alarmierung in "${options[@]}"
+		do
+			case $alarmierung in
+				"Balkonbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"BMA Alarm")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Brand Allgemein")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Dachstuhlbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Flächenbrand groß")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Flächenbrand klein")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Gartenhausbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Gebäudebrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Grillbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Holzstapelbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Kaminbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Kellerbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"LKW Brand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Mülleimerbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"PKW Brand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Privater Rauchmelder")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Rauchentwicklung im Freien unklar")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Rauchentwicklung im Gebäude unklar")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				*) echo "Ungültige Option: $REPLY";;
+			esac
+		done
+fi
+
+if [[ $art == "TH" ]]
+	then
+		#alarmierungth
+		echo "Einsatzstichwort: "
+		PS3='Bitte auswählen: '
+		options=("Notfalltüröffnung" "Person eingeklemmt" "Person in Aufzug" "Person in Wasser" "Personensuche" "Schiffshavarie" "TH Allgemein" "Unterstützung POL" "Unterstützung RD" "VU" "Wasser in Gebäude")
+		select alarmierung in "${options[@]}"
+		do
+			case $alarmierung in
+				"Notfalltüröffnung")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Person eingeklemmt")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Person in Aufzug")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Person in Wasser")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Personensuche")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Schiffshavarie")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"TH Allgemein")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Unterstützung POL")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Unterstützung RD")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"VU")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				"Wasser in Gebäude")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				*) echo "Ungültige Option: $REPLY";;
+			esac
+		done
+fi
+
+if [[ $art == "Gefahrstoffe" ]]
+	then
+		#alarmierunggefahrstoffe
+		echo "Einsatzstichwort: "
+		PS3='Bitte auswählen: '
+		options=("CO2 Alarm" "Gasaustritt" "Gefahrstoffe Allgemein" "Unklarer Geruch") 
+		select alarmierung in "${options[@]}"
+		do
+			case $alarmierung in
+				"CO2 Alarm")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Gasaustritt")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Gefahrstoffe Allgemein")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Unklarer Geruch")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                        
+				*) echo "Ungültige Option: $REPLY";;
+			esac
+		done
+fi
+
+if [[ $art == "Dienstleistung" ]]
+	then
+		#alarmierungdienstleistung
+		echo "Einsatzstichwort: "
+		PS3='Bitte auswählen: '
+		options=("Brandsicherheitswache" "Dammwache" "Dienstleistung Allgemein" "Hydrantenpflege") 
+		select alarmierung in "${options[@]}"
+		do
+			case $alarmierung in
+				"Brandsicherheitswache")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Dammwache")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Dienstleistung Allgemein")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;    
+				"Hydrantenpflege")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;                                             
+				*) echo "Ungültige Option: $REPLY";;
+			esac
+		done
+fi
+
 echo ""
 echo "Bemerkungen : "
 read bemerkungen
 echo ""
 echo ""
 
-# daten in db schreiben
-echo "Schreibe Datensatz.."
+# übersicht eingegebene daten
+echo "Übersicht Einsatz:"
 echo "--------------------"
-if [[ $funktion = AGT ]]
-then
-psql $database $username << EOF
-INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel,angeschnauft,agt) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel', '$angeschnauft', '$agt');
-EOF
-else
-psql $database $username << EOF
-INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel');
-EOF
-fi
-
-# null von agt korrigieren
-if [[ $angeschnauft = false ]]
-	then
-	  psql $database $username << EOF
-          UPDATE einsaetze SET "agt"=NULL WHERE "nummer"='$nummer'; 
-EOF
-fi
-
-
-# geschriebene daten von db lesen
-echo "Fertiiiig. Guck, hier:"
-echo "----------------------"
-psql $database $username << EOF
-SELECT * FROM einsaetze WHERE nummer='$nummer';
-EOF
+echo "Nummer: $nummer"
+echo "Beginn: $beginn $beginnzeit"
+echo "Ende: $ende $endzeit"
+echo "Ort: $ort"
+echo "Art: $art"
+echo "Einsatzmittel: $einsatzmittel"
+echo "Funktion: $funktion"
+echo "Angeschnauft: $angeschnauft"
+echo "AGT: $agt"
+echo "Eingesetzt: $eingesetzt"
+echo "Alarmierung: $alarmierung"
+echo "Bemerkungen: $bemerkungen"
+echo "--------------------"
+echo ""
+# Frage ob in DB schreiben
+#agt
+echo "In Datenbank schreiben?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+	    echo ""		
+	    echo "Schreibe Einsatz in Datenbank.."
+			if [[ $funktion = AGT ]]
+			then
+			psql -A -d $database -U $username -c "INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel,angeschnauft,agt) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel', '$angeschnauft', '$agt');"
+			else
+			psql -A -d $database -U $username -c "INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel');"
+			fi
+			# null von agt korrigieren
+			if [[ $angeschnauft = false ]]
+				then
+				  psql -A -d $database -U $username -c "UPDATE einsaetze SET "agt"=NULL WHERE "nummer"='$nummer';"
+			fi
+			# geschriebene daten von db lesen
+			echo ""
+			echo "Folgenden Einsatz erfolgreich in Datenbank geschrieben:"
+			echo "----------------------"
+			psql -A -d $database -U $username -c "SELECT * FROM einsaetze WHERE nummer='$nummer';"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und speichere nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
