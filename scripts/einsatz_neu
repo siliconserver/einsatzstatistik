@@ -202,7 +202,7 @@ if [[ $art == "Brand" ]]
 		#alarmierungbrand
 		echo "Einsatzstichwort: "
 		PS3='Bitte auswählen: '
-		options=("Balkonbrand" "BMA Alarm" "Brand Allgemein" "Dachstuhlbrand" "Flächenbrand groß" "Flächenbrand klein" "Gartenhausbrand" "Gebäudebrand" "Grillbrand" "Holzstapelbrand" "Kaminbrand" "Kellerbrand" "LKW Brand" "Mülleimerbrand" "PKW Brand" "Privater Rauchmelder" "Rauchentwicklung im Freien unklar" "Rauchentwicklung im Gebäude unklar")
+		options=("Balkonbrand" "BMA Alarm" "Brand Allgemein" "Dachstuhlbrand" "Flächenbrand groß" "Flächenbrand klein" "Gartenhausbrand" "Gebäudebrand" "Grillbrand" "Holzstapelbrand" "Kaminbrand" "Kellerbrand" "LKW Brand" "Mülleimerbrand" "PKW Brand" "Privater Rauchmelder" "Rauchentwicklung im Freien unklar" "Rauchentwicklung im Gebäude unklar" "Wohnungsbrand" "Zimmerbrand")
 		select alarmierung in "${options[@]}"
 		do
 			case $alarmierung in
@@ -278,6 +278,14 @@ if [[ $art == "Brand" ]]
 					echo "Du hast $alarmierung ausgewählt."
 					break
 					;;                        
+				"Wohnungsbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
+				"Zimmerbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
 				*) echo "Ungültige Option: $REPLY";;
 			esac
 		done
@@ -288,7 +296,7 @@ if [[ $art == "TH" ]]
 		#alarmierungth
 		echo "Einsatzstichwort: "
 		PS3='Bitte auswählen: '
-		options=("Notfalltüröffnung" "Person eingeklemmt" "Person in Aufzug" "Person in Wasser" "Personensuche" "Schiffshavarie" "TH Allgemein" "Unterstützung POL" "Unterstützung RD" "VU" "Wasser in Gebäude")
+		options=("Notfalltüröffnung" "Person eingeklemmt" "Person in Aufzug" "Person in Wasser" "Personensuche" "Schiffshavarie" "Tierrettung" "TH Allgemein" "Unterstützung POL" "Unterstützung RD" "VU" "Wasser in Gebäude")
 		select alarmierung in "${options[@]}"
 		do
 			case $alarmierung in
@@ -316,6 +324,10 @@ if [[ $art == "TH" ]]
 					echo "Du hast $alarmierung ausgewählt."
 					break
 					;;                        
+				"Tierrettung")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
 				"TH Allgemein")
 					echo "Du hast $alarmierung ausgewählt."
 					break
@@ -346,10 +358,14 @@ if [[ $art == "Gefahrstoffe" ]]
 		#alarmierunggefahrstoffe
 		echo "Einsatzstichwort: "
 		PS3='Bitte auswählen: '
-		options=("CO2 Alarm" "Gasaustritt" "Gefahrstoffe Allgemein" "Unklarer Geruch") 
+		options=("Auslaufende Gefahrstoffe" "CO2 Alarm" "Gasaustritt" "Gefahrstoffe Allgemein" "Unklarer Geruch")
 		select alarmierung in "${options[@]}"
 		do
 			case $alarmierung in
+				"Auslaufende Gefahrstoffe")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
 				"CO2 Alarm")
 					echo "Du hast $alarmierung ausgewählt."
 					break
