@@ -1,1 +1,7 @@
-tbd
+2021-08-08
+- Updated db script
+- Created db-update script for existing DBs
+- Uploaded new screenshots as animated PNG
+- Edited README.md to show the cool screenshots and modified the description of the scripts
+- Updated the Grafana dashboard.json files to let you get the pie chart for Einsatzstichwort
+- Hotfixed the einsatz_neu script to not use psql -A (was inserted by mistake) but use -P pager=off instead
