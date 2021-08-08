@@ -1,32 +1,23 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_POSTGRESQL",
-      "label": "PostgreSQL",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "postgres",
-      "pluginName": "PostgreSQL"
-    }
-  ],
+  "__inputs": [],
   "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
     {
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "7.4.0"
+      "version": "8.1.0"
     },
     {
       "type": "panel",
-      "id": "grafana-piechart-panel",
-      "name": "Pie Chart",
-      "version": "1.6.1"
-    },
-    {
-      "type": "datasource",
-      "id": "postgres",
-      "name": "PostgreSQL",
-      "version": "1.0.0"
+      "id": "piechart",
+      "name": "Pie chart",
+      "version": ""
     },
     {
       "type": "panel",
@@ -50,6 +41,12 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
@@ -62,7 +59,7 @@
   "panels": [
     {
       "collapsed": false,
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -75,22 +72,26 @@
       "type": "row"
     },
     {
-      "aliasColors": {},
-      "breakPoint": "50%",
       "cacheTimeout": null,
-      "combine": {
-        "label": "Others",
-        "threshold": 0
-      },
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "unit": "short"
         },
         "overrides": []
       },
-      "fontSize": "80%",
-      "format": "short",
       "gridPos": {
         "h": 14,
         "w": 8,
@@ -99,18 +100,29 @@
       },
       "id": 6,
       "interval": null,
-      "legend": {
-        "show": true,
-        "sort": "current",
-        "sortDesc": true,
-        "values": true
-      },
-      "legendType": "Right side",
       "links": [],
-      "nullPointMode": "connected",
-      "pieType": "pie",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
       "pluginVersion": "7.4.0",
-      "strokeWidth": 1,
       "targets": [
         {
           "format": "time_series",
@@ -142,26 +154,29 @@
       "timeFrom": null,
       "timeShift": null,
       "title": "Übungsthema",
-      "type": "grafana-piechart-panel",
-      "valueName": "current"
+      "type": "piechart"
     },
     {
-      "aliasColors": {},
-      "breakPoint": "50%",
       "cacheTimeout": null,
-      "combine": {
-        "label": "Others",
-        "threshold": 0
-      },
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "unit": "short"
         },
         "overrides": []
       },
-      "fontSize": "80%",
-      "format": "short",
       "gridPos": {
         "h": 14,
         "w": 8,
@@ -170,16 +185,29 @@
       },
       "id": 13,
       "interval": null,
-      "legend": {
-        "show": true,
-        "values": true
-      },
-      "legendType": "Right side",
       "links": [],
-      "nullPointMode": "connected",
-      "pieType": "pie",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
       "pluginVersion": "7.4.0",
-      "strokeWidth": 1,
       "targets": [
         {
           "format": "time_series",
@@ -211,18 +239,16 @@
       "timeFrom": null,
       "timeShift": null,
       "title": "Übungsort",
-      "type": "grafana-piechart-panel",
-      "valueName": "current"
+      "type": "piechart"
     },
     {
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "description": "Mit Übungen verbrachte Zeit in h",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "displayName": "Stunden",
           "mappings": [],
           "thresholds": {
@@ -260,7 +286,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.0",
       "targets": [
         {
           "format": "time_series",
@@ -293,14 +319,13 @@
       "type": "stat"
     },
     {
-      "datasource": "${DS_POSTGRESQL}",
-      "description": "Gesamtzahl teilgenommener Übungen",
+      "datasource": null,
+      "description": "Teilgenommene Übungen",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -336,14 +361,14 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.0",
       "targets": [
         {
-          "format": "table",
+          "format": "time_series",
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\nCOUNT(teilnahme::int) AS \"Insgesamt (Anzahl)\"\nFROM uebungen",
+          "rawSql": "SELECT\nNOW() AS \"time\",\nCOUNT(teilnahme::int) AS \"Insgesamt (Anzahl)\"\nFROM uebungen\nWHERE\n  $__timeFilter(start)",
           "refId": "A",
           "select": [
             [
@@ -365,19 +390,20 @@
           ]
         }
       ],
-      "title": "Übungen gesamt",
+      "title": "Übungen ",
       "type": "stat"
     },
     {
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "description": "Übungsteilnahme in %",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
+          "max": 100,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -399,9 +425,6 @@
       },
       "id": 19,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -410,10 +433,11 @@
           "fields": "",
           "values": false
         },
-        "text": {},
-        "textMode": "auto"
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
       },
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.0",
       "targets": [
         {
           "format": "table",
@@ -443,27 +467,24 @@
         }
       ],
       "title": "Teilnahme in %",
-      "type": "stat"
+      "type": "gauge"
     },
     {
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "description": "Teilnahmen in dem ausgewählten Zeitraum",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          }
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
         },
         "overrides": []
       },
@@ -475,10 +496,18 @@
       },
       "id": 21,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
+        "displayLabels": [
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "pie",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -487,9 +516,11 @@
           "values": false
         },
         "text": {},
-        "textMode": "auto"
+        "tooltip": {
+          "mode": "single"
+        }
       },
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "7.5.5",
       "targets": [
         {
           "format": "time_series",
@@ -519,10 +550,10 @@
         }
       ],
       "title": "Teilnahmen in Auswahl",
-      "type": "stat"
+      "type": "piechart"
     },
     {
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "description": "Übungsteilnahme in Auswahl",
       "fieldConfig": {
         "defaults": {
@@ -531,6 +562,7 @@
           },
           "custom": {
             "align": null,
+            "displayMode": "auto",
             "filterable": false
           },
           "mappings": [],
@@ -574,7 +606,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.0",
       "targets": [
         {
           "format": "table",
@@ -608,7 +640,7 @@
     },
     {
       "collapsed": false,
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -621,22 +653,26 @@
       "type": "row"
     },
     {
-      "aliasColors": {},
-      "breakPoint": "50%",
       "cacheTimeout": null,
-      "combine": {
-        "label": "Others",
-        "threshold": 0
-      },
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "unit": "short"
         },
         "overrides": []
       },
-      "fontSize": "80%",
-      "format": "short",
       "gridPos": {
         "h": 13,
         "w": 8,
@@ -645,16 +681,29 @@
       },
       "id": 12,
       "interval": null,
-      "legend": {
-        "show": true,
-        "values": true
-      },
-      "legendType": "Right side",
       "links": [],
-      "nullPointMode": "connected",
-      "pieType": "pie",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
       "pluginVersion": "7.4.0",
-      "strokeWidth": 1,
       "targets": [
         {
           "format": "time_series",
@@ -686,26 +735,29 @@
       "timeFrom": null,
       "timeShift": null,
       "title": "Ausbildungsort",
-      "type": "grafana-piechart-panel",
-      "valueName": "current"
+      "type": "piechart"
     },
     {
-      "aliasColors": {},
-      "breakPoint": "50%",
       "cacheTimeout": null,
-      "combine": {
-        "label": "Others",
-        "threshold": 0
-      },
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
-          "custom": {}
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "unit": "short"
         },
         "overrides": []
       },
-      "fontSize": "80%",
-      "format": "short",
       "gridPos": {
         "h": 13,
         "w": 8,
@@ -714,16 +766,29 @@
       },
       "id": 7,
       "interval": null,
-      "legend": {
-        "show": true,
-        "values": true
-      },
-      "legendType": "Right side",
       "links": [],
-      "nullPointMode": "connected",
-      "pieType": "pie",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value"
+          ]
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
       "pluginVersion": "7.4.0",
-      "strokeWidth": 1,
       "targets": [
         {
           "format": "time_series",
@@ -755,18 +820,16 @@
       "timeFrom": null,
       "timeShift": null,
       "title": "Ausbildungsthema",
-      "type": "grafana-piechart-panel",
-      "valueName": "current"
+      "type": "piechart"
     },
     {
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "description": "Zeit (h) in Auswahl",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "displayName": "Stunden",
           "mappings": [],
           "thresholds": {
@@ -803,7 +866,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.0",
       "targets": [
         {
           "format": "time_series",
@@ -836,14 +899,13 @@
       "type": "stat"
     },
     {
-      "datasource": "${DS_POSTGRESQL}",
-      "description": "Ausbildungstage in Auswahl",
+      "datasource": null,
+      "description": "Ausbildungstage",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -883,14 +945,14 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.0",
       "targets": [
         {
-          "format": "table",
+          "format": "time_series",
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\nCOUNT(*) AS \"Insgesamt (Anzahl)\"\nFROM ausbildung",
+          "rawSql": "SELECT\n  NOW() AS \"time\",\nCOUNT(*) AS \"Insgesamt (Anzahl)\"\nFROM ausbildung\nWHERE\n  $__timeFilter(start)",
           "refId": "A",
           "select": [
             [
@@ -916,7 +978,7 @@
       "type": "stat"
     },
     {
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": null,
       "description": "Ausbildungen in Auswahl",
       "fieldConfig": {
         "defaults": {
@@ -925,6 +987,7 @@
           },
           "custom": {
             "align": null,
+            "displayMode": "auto",
             "filterable": false
           },
           "mappings": [],
@@ -968,7 +1031,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "7.4.0",
+      "pluginVersion": "8.1.0",
       "targets": [
         {
           "format": "table",
@@ -1001,7 +1064,7 @@
       "type": "table"
     }
   ],
-  "schemaVersion": 27,
+  "schemaVersion": 30,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1013,7 +1076,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Übungen / Ausbildungen",
-  "uid": "5nIQE4EMz",
-  "version": 26
+  "title": "Übungen und Ausbildungen",
+  "uid": "-_UaK2Gnz",
+  "version": 1
 }
