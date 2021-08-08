@@ -5,9 +5,11 @@
 .
 ├── README.md
 ├── dashboards
-│   └── alle-einsaetze.json
+    ├── uebungen_ausbildung.json
+│   └── einsaetze.json
 ├── db
-│   └── initialdump.sql
+    ├── database-update.sql
+│   └── database.sql
 └── scripts
     ├── ausbildung_del
     ├── ausbildung_neu
@@ -33,12 +35,16 @@ Ausbildung Dashboard:
 
 ## DB folder
 Contains the PostgreSQL initialdump for all the scripts and dashboards.
+Update Script for updating old Databases is here as well.
 
 ## Scripts
-Contains scripts to add and remove entries for Ausbildung, Einsatz and Übung to the matching database tables.
+Contains scripts to add and remove entries for Ausbildung, Einsatz and Übung to database.
 
 Example Einsatz Neu:
-![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/einsatz_neu.png?inline=false)
+![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/einsatz_neu.gif?inline=false)
+
+Example Einsatz Delete:
+![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/einsatz_del.gif?inline=false)
 
 ## License
 Everything published inside this repository is GPLv3. A credit would be nice, but is not needed.
