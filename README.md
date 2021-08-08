@@ -24,13 +24,13 @@
 ## Dashboards folder
 Contains several Grafana Dashboards as json Files. Can be easily imported in Grafana.
 
-Einsatz Dashboard:
+**Einsatz Dashboard:**
 ![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/alle-einsaetze.png?inline=false)
 
-Übungen Dashboard:
+**Übungen Dashboard:**
 ![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/uebungen.png?inline=false)
 
-Ausbildung Dashboard:
+**Ausbildung Dashboard:**
 ![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/ausbildungen.png?inline=false)
 
 ## DB folder
@@ -40,10 +40,10 @@ Update Script for updating old Databases is here as well.
 ## Scripts
 Contains scripts to add and remove entries for Ausbildung, Einsatz and Übung to database.
 
-Example Einsatz Neu:
+**Example Einsatz Neu:**
 ![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/einsatz_neu.gif?inline=false)
 
-Example Einsatz Delete:
+**Example Einsatz Delete:**
 ![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/einsatz_del.gif?inline=false)
 
 ## License
