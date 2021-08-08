@@ -8,7 +8,7 @@ database=feuerwehr
 echo ""
 echo "Letzter Einsatz"
 echo "-------------"
-psql -A -d $database -U $username -c "SELECT * FROM einsaetze ORDER BY nummer DESC LIMIT 1;"
+psql -d $database -U $username -c "SELECT * FROM einsaetze ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Neuer Einsatz"
@@ -454,20 +454,20 @@ do
 	    echo "Schreibe Einsatz in Datenbank.."
 			if [[ $funktion = AGT ]]
 			then
-			psql -A -d $database -U $username -c "INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel,angeschnauft,agt) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel', '$angeschnauft', '$agt');"
+			psql -d $database -U $username -c "INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel,angeschnauft,agt) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel', '$angeschnauft', '$agt');"
 			else
-			psql -A -d $database -U $username -c "INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel');"
+			psql -d $database -U $username -c "INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel');"
 			fi
 			# null von agt korrigieren
 			if [[ $angeschnauft = false ]]
 				then
-				  psql -A -d $database -U $username -c "UPDATE einsaetze SET "agt"=NULL WHERE "nummer"='$nummer';"
+				  psql -d $database -U $username -c "UPDATE einsaetze SET "agt"=NULL WHERE "nummer"='$nummer';"
 			fi
 			# geschriebene daten von db lesen
 			echo ""
 			echo "Folgenden Einsatz erfolgreich in Datenbank geschrieben:"
 			echo "----------------------"
-			psql -A -d $database -U $username -c "SELECT * FROM einsaetze WHERE nummer='$nummer';"
+			psql -d $database -U $username -c "SELECT * FROM einsaetze WHERE nummer='$nummer';"
             break
             ;;
         "Nee, doch nicht!")
