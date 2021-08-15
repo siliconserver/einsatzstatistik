@@ -1,3 +1,9 @@
+2021-08-15
+- Added career milestones feature
+- Added milestone scripts
+- Updated db script and db-update script for milestone feature
+
+
 2021-08-08
 - Updated db script
 - Created db-update script for existing DBs
