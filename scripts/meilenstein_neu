@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+
+echo "Letzter Meilenstein"
+echo "-------------"
+psql $database $username << EOF
+SELECT * FROM meilensteine ORDER BY nummer DESC LIMIT 1;
+EOF
+echo ""
+echo ""
+echo "Neuer Meilenstein"
+echo "-------------"
+echo ""
+
+# einlesen der daten
+echo "Meilenstein Nummer z.B. 4 : "
+read nummer
+echo "Datum z.B. 2019-05-25 :"
+read datum
+echo "Thema (Truppmann/AGT/Sprechfunker/etc.): "
+read thema
+echo "Bemerkungen : "
+read bemerkungen
+echo ""
+
+# daten in db schreiben
+echo "Schreibe Datensatz.."
+echo "--------------------"
+psql $database $username << EOF
+INSERT INTO meilensteine (nummer,date,thema,bemerkungen) VALUES ('$nummer', '$datum', '$thema', '$bemerkungen');
+EOF
+
+# geschriebene daten von db lesen
+echo "Fertiiiig. Guck, hier:"
+echo "----------------------"
+psql $database $username << EOF
+SELECT * FROM meilensteine WHERE nummer='$nummer';
+EOF
