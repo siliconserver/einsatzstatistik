@@ -9,9 +9,7 @@ ende=19:30:00
 
 echo "Letzte Übung"
 echo "-------------"
-psql $database $username << EOF
-SELECT * FROM uebungen ORDER BY nummer DESC LIMIT 1;
-EOF
+psql -P pager=off -d $database -U $username -c "SELECT * FROM uebungen ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Neue Übung"
@@ -25,9 +23,10 @@ echo "Datum in ISO z.B. 2019-05-25 :"
 read datum 
 echo "Ort z.B. Woerth :"
 read ort
+
 echo "Übungsthema: "
 PS3='Bitte auswählen: '
-options=("Unbekannt" "FwDV3" "FwDV10" "TH" "DLK" "PA" "Drohne" "Motorsäge" "Kaminbrand" "BMA" "Deiche" "AbstuSi" "Belüftung" "Alternative Antriebe" "Wasserrettung" "UVV" "Gefahrstoffe" "Jahreshauptübung" "Straßenbahn" "Putzen" "Sonstiges")
+options=("Unbekannt" "FwDV3" "FwDV10" "TH" "DLK" "PA" "Drohne" "Motorsäge" "Kaminbrand" "BMA" "Deiche" "AbstuSi" "Belüftung" "Alternative Antriebe" "Boot" "UVV" "Gefahrstoffe" "Jahreshauptübung" "Straßenbahn" "Putzen" "Sonstiges")
 select art in "${options[@]}"
 do
     case $art in
@@ -59,58 +58,62 @@ do
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "Motorsäge")
             echo "Du hast $art ausgewählt."
             break
             ;;            
-        "")
+        "Kaminbrand")
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "BMA")
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "Deiche")
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "AbstuSi")
             echo "Du hast $art ausgewählt."
             break
             ;;            
-        "")
+        "Belüftung")
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "Alternative Antriebe")
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "Boot")
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "UVV")
             echo "Du hast $art ausgewählt."
             break
             ;;            
-        "")
+        "Gefahrstoffe")
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "Jahreshauptübung")
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "Straßenbahn")
             echo "Du hast $art ausgewählt."
             break
             ;;
-        "")
+        "Putzen")
             echo "Du hast $art ausgewählt."
             break
-            ;;                                                
+            ;;            
+        "Sonstiges")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;                                       
         *) echo "Ungültige Option: $REPLY";;
     esac
 done
@@ -121,16 +124,42 @@ echo "Bemerkungen : "
 read bemerkungen
 echo ""
 
-# daten in db schreiben
-echo "Schreibe Datensatz.."
+# übersicht eingegebene daten
+echo "Übersicht Einsatz:"
 echo "--------------------"
-psql $database $username << EOF
-INSERT INTO uebungen (nummer,start,ende,ort,thema,teilnahme,bemerkungen) VALUES ('$nummer', '$datum $beginn', '$datum $ende', '$ort', '$thema', '$teilnahme', '$bemerkungen');
-EOF
+echo "Nummer: $nummer"
+echo "Datum: $start"
+echo "Ende: $ende"
+echo "Ort: $ort"
+echo "Thema: $thema"
+echo "Teilnahme: $teilnahme"
+echo "Bemerkungen: $bemerkungen"
+echo "--------------------"
+echo ""
 
-# geschriebene daten von db lesen
-echo "Fertiiiig. Guck, hier:"
-echo "----------------------"
-psql $database $username << EOF
-SELECT * FROM uebungen WHERE nummer='$nummer';
-EOF
+# Frage ob in DB schreiben
+echo "In Datenbank schreiben?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+	    echo ""		
+	    echo "Schreibe Übung in Datenbank.."
+        psql -P pager=off -d $database -U $username -c "INSERT INTO uebungen (nummer,start,ende,ort,thema,teilnahme,bemerkungen) VALUES ('$nummer', '$datum $beginn', '$datum $ende', '$ort', '$thema', '$teilnahme', '$bemerkungen');"
+			# geschriebene daten von db lesen
+			echo ""
+			echo "Folgende Übung erfolgreich in Datenbank geschrieben:"
+			echo "----------------------"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM uebungen WHERE nummer='$nummer';"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und speichere nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
