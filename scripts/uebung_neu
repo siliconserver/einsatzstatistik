@@ -25,8 +25,96 @@ echo "Datum in ISO z.B. 2019-05-25 :"
 read datum 
 echo "Ort z.B. Woerth :"
 read ort
-echo "Thema (Belüftung/FwDV3/TH/etc.): "
-read thema
+echo "Übungsthema: "
+PS3='Bitte auswählen: '
+options=("Unbekannt" "FwDV3" "FwDV10" "TH" "DLK" "PA" "Drohne" "Motorsäge" "Kaminbrand" "BMA" "Deiche" "AbstuSi" "Belüftung" "Alternative Antriebe" "Wasserrettung" "UVV" "Gefahrstoffe" "Jahreshauptübung" "Straßenbahn" "Putzen" "Sonstiges")
+select art in "${options[@]}"
+do
+    case $art in
+        "Unbekannt")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "FwDV3")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "FwDV10")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "TH")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;            
+        "DLK")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "PA")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "Drohne")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;            
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;            
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;            
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;
+        "")
+            echo "Du hast $art ausgewählt."
+            break
+            ;;                                                
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
+echo ""
 echo "Teilnahme (true/false) : "
 read teilnahme
 echo "Bemerkungen : "
