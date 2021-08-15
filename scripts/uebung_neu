@@ -27,91 +27,91 @@ read ort
 echo "Übungsthema: "
 PS3='Bitte auswählen: '
 options=("Unbekannt" "FwDV3" "FwDV10" "TH" "DLK" "PA" "Drohne" "Motorsäge" "Kaminbrand" "BMA" "Deiche" "AbstuSi" "Belüftung" "Alternative Antriebe" "Boot" "UVV" "Gefahrstoffe" "Jahreshauptübung" "Straßenbahn" "Putzen" "Sonstiges")
-select art in "${options[@]}"
+select thema in "${options[@]}"
 do
-    case $art in
+    case $thema in
         "Unbekannt")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "FwDV3")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "FwDV10")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "TH")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;            
         "DLK")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "PA")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "Drohne")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "Motorsäge")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;            
         "Kaminbrand")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "BMA")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "Deiche")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "AbstuSi")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;            
         "Belüftung")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "Alternative Antriebe")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "Boot")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "UVV")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;            
         "Gefahrstoffe")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "Jahreshauptübung")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "Straßenbahn")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;
         "Putzen")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;            
         "Sonstiges")
-            echo "Du hast $art ausgewählt."
+            echo "Du hast $thema ausgewählt."
             break
             ;;                                       
         *) echo "Ungültige Option: $REPLY";;
