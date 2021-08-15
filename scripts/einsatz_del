@@ -7,9 +7,7 @@ database=feuerwehr
 
 echo "Letzter Einsatz"
 echo "-------------"
-psql $database $username << EOF
-SELECT * FROM einsaetze ORDER BY nummer DESC LIMIT 1;
-EOF
+psql -P pager=off -d $database -U $username -c "SELECT * FROM einsaetze ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Einsatz löschen"
@@ -21,9 +19,34 @@ echo "Einsatz Nummer z.B. 104 : "
 read nummer
 echo ""
 
-# daten in db schreiben
-echo "Lösche Datensatz.."
+# übersicht eingegebene daten
+echo "Ausgewählter Einsatz zum löschen:"
 echo "--------------------"
-psql $database $username << EOF
-DELETE FROM einsaetze WHERE nummer='$nummer';
-EOF
+psql -P pager=off -d $database -U $username -c "SELECT * FROM einsaetze WHERE nummer='$nummer';"
+echo "--------------------"
+echo ""
+
+# Frage ob aus DB schreiben
+echo "Einsatz löschen?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+            echo ""		
+            echo "Lösche Einsatz aus Datenbank.."
+            psql -P pager=off -d $database -U $username -c "DELETE FROM einsaetze WHERE nummer='$nummer';"
+            echo ""
+            echo "Einsatz gelöscht"
+            echo "----------------------"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und lösche nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done

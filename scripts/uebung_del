@@ -26,7 +26,7 @@ psql -P pager=off -d $database -U $username -c "SELECT * FROM uebungen WHERE num
 echo "--------------------"
 echo ""
 
-# Frage ob in DB schreiben
+# Frage ob aus DB schreiben
 echo "Übung löschen?: "
 PS3='Bitte auswählen: '
 options=("OK" "Nee, doch nicht!")
@@ -44,7 +44,7 @@ do
             break
             ;;
         "Nee, doch nicht!")
-            echo "Breche ab und lösche nichts in die Datenbank."
+            echo "Breche ab und lösche nichts aus der Datenbank."
             break
             ;;
         *) echo "Ungültige Option: $REPLY";;
