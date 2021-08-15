@@ -46,3 +46,12 @@ CREATE TABLE IF NOT EXISTS "variablen" (
 	"name" TEXT NULL DEFAULT NULL,
 	"wert" TEXT NULL DEFAULT NULL
 );
+
+-- Dumping structure for table feuerwehr.meilensteine
+CREATE TABLE IF NOT EXISTS "meilensteine" (
+	"nummer" INTEGER NULL DEFAULT NULL,
+	"date" DATE NULL DEFAULT NULL,
+	"thema" TEXT NULL DEFAULT NULL,
+	"bemerkungen" TEXT NULL DEFAULT NULL
+)
+;

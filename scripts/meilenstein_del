@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+
+echo "Letzter Meilenstein"
+echo "-------------"
+psql $database $username << EOF
+SELECT * FROM meilensteine ORDER BY nummer DESC LIMIT 1;
+EOF
+echo ""
+echo ""
+echo "Meilenstein entfernen"
+echo "-------------"
+echo ""
+
+# einlesen der daten
+echo "Meilenstein Nummer z.B. 4 : "
+read nummer
+echo ""
+
+# daten in db schreiben
+echo "Lösche Datensatz.."
+echo "--------------------"
+psql $database $username << EOF
+DELETE FROM meilensteine WHERE nummer='$nummer';
+EOF
