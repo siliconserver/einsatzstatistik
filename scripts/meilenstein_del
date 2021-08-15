@@ -7,9 +7,7 @@ database=feuerwehr
 
 echo "Letzter Meilenstein"
 echo "-------------"
-psql $database $username << EOF
-SELECT * FROM meilensteine ORDER BY nummer DESC LIMIT 1;
-EOF
+psql -P pager=off -d $database -U $username -c "SELECT * FROM meilensteine ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Meilenstein entfernen"
@@ -21,9 +19,34 @@ echo "Meilenstein Nummer z.B. 4 : "
 read nummer
 echo ""
 
-# daten in db schreiben
-echo "Lösche Datensatz.."
+# übersicht eingegebene daten
+echo "Ausgewählter Meilenstein zum löschen:"
 echo "--------------------"
-psql $database $username << EOF
-DELETE FROM meilensteine WHERE nummer='$nummer';
-EOF
+psql -P pager=off -d $database -U $username -c "SELECT * FROM meilensteine WHERE nummer='$nummer';"
+echo "--------------------"
+echo ""
+
+# Frage ob aus DB löschen
+echo "Meilenstein löschen?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+            echo ""		
+            echo "Lösche Meilenstein aus Datenbank.."
+            psql -P pager=off -d $database -U $username -c "DELETE FROM meilensteine WHERE nummer='$nummer';"
+            echo ""
+            echo "Meilenstein gelöscht"
+            echo "----------------------"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und lösche nichts aus der Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done

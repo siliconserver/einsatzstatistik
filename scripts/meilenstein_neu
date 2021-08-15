@@ -7,9 +7,7 @@ database=feuerwehr
 
 echo "Letzter Meilenstein"
 echo "-------------"
-psql $database $username << EOF
-SELECT * FROM meilensteine ORDER BY nummer DESC LIMIT 1;
-EOF
+psql -P pager=off -d $database -U $username -c "SELECT * FROM meilensteine ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Neuer Meilenstein"
@@ -27,16 +25,38 @@ echo "Bemerkungen : "
 read bemerkungen
 echo ""
 
-# daten in db schreiben
-echo "Schreibe Datensatz.."
+# übersicht eingegebene daten
+echo "Übersicht Meilenstein:"
 echo "--------------------"
-psql $database $username << EOF
-INSERT INTO meilensteine (nummer,date,thema,bemerkungen) VALUES ('$nummer', '$datum', '$thema', '$bemerkungen');
-EOF
+echo "Nummer: $nummer"
+echo "Datum: $datum"
+echo "Thema: $thema"
+echo "Bemerkungen: $bemerkungen"
+echo "--------------------"
+echo ""
 
-# geschriebene daten von db lesen
-echo "Fertiiiig. Guck, hier:"
-echo "----------------------"
-psql $database $username << EOF
-SELECT * FROM meilensteine WHERE nummer='$nummer';
-EOF
+# Frage ob in DB schreiben
+echo "In Datenbank schreiben?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+	        echo ""		
+	        echo "Schreibe Meilenstein in Datenbank.."
+            psql -P pager=off -d $database -U $username -c "INSERT INTO meilensteine (nummer,date,thema,bemerkungen) VALUES ('$nummer', '$datum', '$thema', '$bemerkungen');"
+			echo ""
+			echo "Folgender Meilenstein erfolgreich in Datenbank geschrieben:"
+			echo "----------------------"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM meilensteine WHERE nummer='$nummer';"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und speichere nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done

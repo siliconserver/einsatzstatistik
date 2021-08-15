@@ -7,9 +7,7 @@ database=feuerwehr
 
 echo "Letzte Ausbildung"
 echo "-------------"
-psql $database $username << EOF
-SELECT * FROM ausbildung ORDER BY nummer DESC LIMIT 1;
-EOF
+psql -P pager=off -d $database -U $username -c "SELECT * FROM ausbildung ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Neue Ausbildung"
@@ -33,16 +31,41 @@ echo "Bemerkungen : "
 read bemerkungen
 echo ""
 
-# daten in db schreiben
-echo "Schreibe Datensatz.."
+# übersicht eingegebene daten
+echo "Übersicht Ausbildung:"
 echo "--------------------"
-psql $database $username << EOF
-INSERT INTO ausbildung (nummer,start,ende,ort,thema,bemerkungen) VALUES ('$nummer', '$datum $beginnzeit', '$datum $endzeit', '$ort', '$thema', '$bemerkungen');
-EOF
+echo "Nummer: $nummer"
+echo "Beginn: $datum $beginnzeit"
+echo "Ende: $datum $endzeit"
+echo "Ort: $ort"
+echo "Thema: $thema"
+echo "Bemerkungen: $bemerkungen"
+echo "--------------------"
+echo ""
 
-# geschriebene daten von db lesen
-echo "Fertiiiig. Guck, hier:"
-echo "----------------------"
-psql $database $username << EOF
-SELECT * FROM ausbildung WHERE nummer='$nummer';
-EOF
+# Frage ob in DB schreiben
+echo "In Datenbank schreiben?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+	        echo ""		
+	        echo "Schreibe Ausbildung in Datenbank.."
+            psql -P pager=off -d $database -U $username -c "INSERT INTO ausbildung (nummer,start,ende,ort,thema,bemerkungen) VALUES ('$nummer', '$datum $beginnzeit', '$datum $endzeit', '$ort', '$thema', '$bemerkungen');"
+			# geschriebene daten von db lesen
+			echo ""
+			echo "Folgende Ausbildung erfolgreich in Datenbank geschrieben:"
+			echo "----------------------"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM ausbildung WHERE nummer='$nummer';"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und speichere nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
