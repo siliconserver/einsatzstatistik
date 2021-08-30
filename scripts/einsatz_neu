@@ -46,7 +46,7 @@ echo ""
 echo "Auswahl Enddatum:"
 # auswahl Y/N ob aktueller Tag als Datum
 while true; do
-	read -p "Aktuellen Tag als Enddatum $d verwenden? (Yy/Nn): " yn
+	read -p "Aktuellen Tag ($d) als Enddatum verwenden? (Yy/Nn): " yn
 	case $yn in
 		[Yy]* ) ende=$d; break;;
 		[Nn]* ) ende=manual; break;;
