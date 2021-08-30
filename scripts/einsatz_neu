@@ -4,6 +4,7 @@
 hostname=localhost
 username=root
 database=feuerwehr
+d=`date +%Y-%m-%d`
 
 echo ""
 echo "Letzter Einsatz"
@@ -19,14 +20,46 @@ echo ""
 echo "Einsatz Nummer z.B. 104 : "
 read nummer
 echo ""
-echo "Startdatum z.B. 2019-05-25 :"
-read beginn
+
+echo "Auswahl Startdatum:"
+# auswahl Y/N ob aktueller Tag als Datum
+while true; do
+	read -p "Aktuellen Tag als Startdatum $d verwenden? (Yy/Nn): " yn
+	case $yn in
+		[Yy]* ) beginn=$d; break;;
+		[Nn]* ) beginn=manual; break;;
+		* ) echo "Antwort mit Y oder N!.";;
+	esac
+done
+if [[ $beginn = manual ]]
+	then
+		#funktion
+		echo "Startdatum z.B. 2019-05-25 :"
+		read beginn
+fi
+
 echo ""
 echo "Startzeit z.B. 04:57:17 :"
 read beginnzeit
 echo ""
-echo "Enddatum z.B. 2019-05-25 :"
-read ende
+
+echo "Auswahl Enddatum:"
+# auswahl Y/N ob aktueller Tag als Datum
+while true; do
+	read -p "Aktuellen Tag als Enddatum $d verwenden? (Yy/Nn): " yn
+	case $yn in
+		[Yy]* ) ende=$d; break;;
+		[Nn]* ) ende=manual; break;;
+		* ) echo "Antwort mit Y oder N!.";;
+	esac
+done
+if [[ $ende = manual ]]
+	then
+		#funktion
+		echo "Enddatum z.B. 2019-05-25 :"
+		read ende
+fi
+
 echo ""
 echo "Endzeit z.B. 04:57:17 :"
 read endzeit
