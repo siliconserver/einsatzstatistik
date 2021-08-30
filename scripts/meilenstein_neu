@@ -4,6 +4,7 @@
 hostname=localhost
 username=root
 database=feuerwehr
+d=`date +%Y-%m-%d`
 
 echo "Letzter Meilenstein"
 echo "-------------"

@@ -6,6 +6,7 @@ username=root
 database=feuerwehr
 beginn=18:00:00
 ende=19:30:00
+d=`date +%Y-%m-%d`
 
 echo "Letzte Übung"
 echo "-------------"
