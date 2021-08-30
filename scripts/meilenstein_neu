@@ -17,8 +17,24 @@ echo ""
 # einlesen der daten
 echo "Meilenstein Nummer z.B. 4 : "
 read nummer
-echo "Datum z.B. 2019-05-25 :"
-read datum
+echo ""
+echo "Auswahl Datum:"
+# auswahl Y/N ob aktueller Tag als Datum
+while true; do
+	read -p "Aktuellen Tag ($d) als Datum verwenden? (Yy/Nn): " yn
+	case $yn in
+		[Yy]* ) datum=$d; break;;
+		[Nn]* ) datum=manual; break;;
+		* ) echo "Antwort mit Y oder N!.";;
+	esac
+done
+if [[ $datum = manual ]]
+	then
+		#funktion
+		echo "Datum z.B. 2019-05-25 :"
+		read datum
+fi
+echo ""
 echo "Thema (Truppmann/AGT/Sprechfunker/etc.): "
 read thema
 echo "Bemerkungen : "

@@ -24,7 +24,7 @@ echo ""
 echo "Auswahl Startdatum:"
 # auswahl Y/N ob aktueller Tag als Datum
 while true; do
-	read -p "Aktuellen Tag als Startdatum $d verwenden? (Yy/Nn): " yn
+	read -p "Aktuellen Tag ($d) als Startdatum verwenden? (Yy/Nn): " yn
 	case $yn in
 		[Yy]* ) beginn=$d; break;;
 		[Nn]* ) beginn=manual; break;;
