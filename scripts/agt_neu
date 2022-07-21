@@ -1,0 +1,197 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+d=`date +%Y-%m-%d`
+
+name=NULL
+vorname=NULL
+agtlehrgang=NULL
+csalehrgang=NULL
+lastbelastung=NULL
+nextbelastung=NULL
+lastg26=NULL
+nextg26=NULL
+lasteinsatz=NULL
+lastcsaeinsatz=NULL
+patauglich=NULL
+csatauglich=NULL
+arigon=NULL
+agtaktiv=NULL
+kommentar=NULL
+
+
+echo ""
+echo "Neuer AGT"
+echo "-------------"
+echo ""
+
+# einlesen der daten
+echo "Vorname: "
+read vorname
+echo ""
+echo "Name: "
+read name
+echo ""
+# nur dinge fragen wenn noch aktiver agt
+while true; do
+        read -p "Aktiver AGT? (Yy/Nn): " yn
+        case $yn in
+                [Yy]* ) agtaktiv="true"; break;;
+                [Nn]* ) agtaktiv="false"; break;;
+                * ) echo "Antwort mit Y oder N!.";;
+        esac
+done
+
+if [[ $agtaktiv = true ]]
+	then
+echo "AGT-Lehrgang z.B. 2022-04-10: "
+read agtlehrgang
+echo ""
+# auswahl Y/N ob csa-traeger
+while true; do
+        read -p "CSA Träger? (Yy/Nn): " yn
+        case $yn in
+                [Yy]* ) csa="true"; break;;
+                [Nn]* ) csa="false"; break;;
+                * ) echo "Antwort mit Y oder N!.";;
+        esac
+done
+# nur dinge tun, wenn csa-träger, sonst ignorieren
+if [[ $csa = true ]]
+	then
+		echo "CSA-Lehrgang z.B. 2022-04-10: "
+		read csalehrgang
+		echo ""
+	fi
+echo "Letze Belastungsübung z.B. 2022-04-10: "
+read lastbelastung
+echo ""
+echo "Termin Belastungsübung z.B. 2022-04-10: "
+read nextbelastung
+echo ""
+echo "Letze G26 z.B. 2022-04-10: "
+read lastg26
+echo ""
+echo "G26 bis z.B. 2022-04-10: "
+read nextg26
+echo ""
+echo "Letzer AGT-Einsatz z.B. 2022-04-10: "
+read lasteinsatz
+echo ""
+# nur dinge tun, wenn csa-träger, sonst ignorieren
+if [[ $csa = true ]]
+        then
+		echo "Letzter CSA-Einsatz z.B. 2022-04-10: "
+		read lastcsaeinsatz
+		echo ""
+	fi
+while true; do
+        read -p "PA-Tauglich? (Yy/Nn): " yn
+        case $yn in
+                [Yy]* ) patauglich="true"; break;;
+                [Nn]* ) patauglich="false"; break;;
+                * ) echo "Antwort mit Y oder N!.";;
+        esac
+done
+echo ""
+# nur dinge tun, wenn csa-träger, sonst ignorieren
+if [[ $csa = true ]]
+        then
+		while true; do
+		        read -p "CSA-Tauglich? (Yy/Nn): " yn
+		        case $yn in
+		                [Yy]* ) csatauglich="true"; break;;
+		                [Nn]* ) csatauglich="false"; break;;
+		                * ) echo "Antwort mit Y oder N!.";;
+		        esac
+		done
+	else
+		csatauglich="false"
+	fi
+echo ""
+while true; do
+        read -p "In Arigon? (Yy/Nn): " yn
+        case $yn in
+                [Yy]* ) arigon="true"; break;;
+                [Nn]* ) arigon="false"; break;;
+                * ) echo "Antwort mit Y oder N!.";;
+        esac
+done
+echo ""
+#while true; do
+#        read -p "Aktiver AGT? (Yy/Nn): " yn
+#        case $yn in
+#                [Yy]* ) agtaktiv="true"; break;;
+#                [Nn]* ) agtaktiv="false"; break;;
+#                * ) echo "Antwort mit Y oder N!.";;
+#        esac
+#done
+else
+	patauglich="false"
+	csatauglich="false"
+fi
+echo ""
+echo "Kommentar: "
+read kommentar
+echo ""
+
+# übersicht eingegebene daten
+echo "Übersicht neuer AGT:"
+echo "--------------------"
+echo "Name: $name"
+echo "Vorname: $vorname"
+echo "AGT-Lehrgang: $agtlehrgang"
+echo "CSA-Lehrgang: $csalehrgang"
+echo "Letzte Belastungsübung: $lastbelastung"
+echo "Termin Belastungsübung: $nextbelastung"
+echo "G26 von: $lastg26"
+echo "G26 bis: $nextg26"
+echo "Letzter AGT Einsatz: $lasteinsatz"
+echo "Letzter CSA Einsatz: $lastcsaeinsatz"
+echo "PA-Tauglich?: $patauglich"
+echo "CSA-Tauglich?: $csatauglich"
+echo "In Arigon?: $arigon"
+echo "Aktiver AGT?: $agtaktiv"
+echo "Kommentar: $kommentar"
+echo "--------------------"
+echo ""
+# Frage ob in DB schreiben
+#agt
+echo "In Datenbank schreiben?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+	    echo ""		
+	    echo "Speichere neuen Pa-Träger in Datenbank.."
+			if [[ $agtaktiv = true ]]
+			then
+				if [[ $csa = true ]]
+				then
+			psql -P pager=off -d $database -U $username -c "INSERT INTO atemschutz (name,vorname,agtlehrgang,csalehrgang,lastbelastung,nextbelastung,g26von,g26bis,lasteinsatz,lastcsaeinsatz,patauglich,csatauglich,arigon,agtaktiv,kommentar) VALUES ('$name', '$vorname', '$agtlehrgang', '$csalehrgang', '$lastbelastung', '$nextbelastung', '$lastg26', '$nextg26', '$lasteinsatz', '$lastcsaeinsatz', '$patauglich', '$csatauglich', '$arigon', '$agtaktiv', '$kommentar');"
+				else
+			psql -P pager=off -d $database -U $username -c "INSERT INTO atemschutz (name,vorname,agtlehrgang,lastbelastung,nextbelastung,g26von,g26bis,lasteinsatz,patauglich,csatauglich,arigon,agtaktiv,kommentar) VALUES ('$name', '$vorname', '$agtlehrgang', '$lastbelastung', '$nextbelastung', '$lastg26', '$nextg26', '$lasteinsatz', '$patauglich', 'false', '$arigon', '$agtaktiv', '$kommentar');"
+				fi
+			else
+			psql -P pager=off -d $database -U $username -c "INSERT INTO atemschutz (name,vorname,patauglich,csatauglich,agtaktiv,kommentar) VALUES ('$name', '$vorname', 'false', 'false', 'false', '$kommentar');"
+			fi
+			# geschriebene daten von db lesen
+			echo ""
+			echo "Folgenden AGT-Träger in Datenbank erstellt:"
+			echo "----------------------"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutz WHERE name='$name' and vorname='$vorname';"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und speichere nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done

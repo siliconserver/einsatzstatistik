@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+d=`date +%Y-%m-%d`
+
+echo ""
+echo "Neuer Termin auf der AS-Strecke"
+echo "-------------"
+echo ""
+
+# einlesen der daten
+echo Termin z.B. 2022-05-25": "
+read datum
+echo ""
+echo "Uhrzeit z.B. 18:15:00 : "
+read uhrzeit
+echo ""
+
+
+# übersicht eingegebene daten
+echo "Übersicht neuer AS-Termin:"
+echo "--------------------"
+echo "Datum: $datum"
+echo "Uhrzeit: $uhrzeit"
+echo "--------------------"
+echo ""
+# Frage ob in DB schreiben
+#agt
+echo "In Datenbank schreiben?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+	    echo ""		
+	    echo "Speichere neuen Termin in Datenbank.."
+			psql -P pager=off -d $database -U $username -c "INSERT INTO atemschutzstrecke (termin) VALUES ('$datum $uhrzeit');"
+			# geschriebene daten von db lesen
+			echo ""
+			echo "Folgenden Termin in Datenbank erstellt:"
+			echo "----------------------"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutzstrecke WHERE termin='$datum $uhrzeit';"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und speichere nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done

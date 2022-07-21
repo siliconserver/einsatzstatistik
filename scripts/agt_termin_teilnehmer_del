@@ -1,0 +1,103 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+d=`date +%Y-%m-%d`
+
+echo ""
+echo "Teilnehmer von Termin entfernen"
+echo "-------------"
+echo ""
+
+echo "Terminübersicht"
+echo "-------------"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutzstrecke ORDER BY termin ASC LIMIT 9;"
+echo ""
+echo ""
+
+
+# einlesen der daten
+echo Termin z.B. 2022-05-25": "
+read datum
+echo ""
+echo "Uhrzeit z.B. 18:15:00 : "
+read uhrzeit
+echo ""
+
+echo ""
+echo "Aktuelle Terminbelegung"
+echo "-------------"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutzstrecke WHERE termin='$datum $uhrzeit';"
+echo ""
+echo ""
+
+#teilnehmer
+echo "Teilnehmer entfernen: "
+PS3='Bitte auswählen: '
+options=("Teilnehmer 1" "Teilnehmer 2" "Teilnehmer 3" "Teilnehmer 4")
+select teilnehmer in "${options[@]}"
+do
+        case $teilnehmer in
+                "Teilnehmer 1")
+                        echo "Du hast $teilnehmer ausgewählt."
+			teilnehmer=teilnehmer1
+                        break
+                        ;;
+                "Teilnehmer 2")
+                        echo "Du hast $teilnehmer ausgewählt."
+			teilnehmer=teilnehmer2
+                        break
+                        ;;
+                "Teilnehmer 3")
+                        echo "Du hast $teilnehmer ausgewählt."
+			teilnehmer=teilnehmer3
+                        break
+                        ;;
+                "Teilnehmer 4")
+                        echo "Du hast $teilnehmer ausgewählt."
+			teilnehmer=teilnehmer4
+                        break
+                        ;;
+                *) echo "Ungültige Option: $REPLY";;
+        esac
+done
+
+echo ""
+
+# übersicht eingegebene daten
+echo "Übersicht zu entfernender Teilnehmer:"
+echo "--------------------"
+echo "Datum: $datum"
+echo "Uhrzeit: $uhrzeit"
+echo "Teilnehmer: $teilnehmer"
+echo "--------------------"
+echo ""
+# Frage ob in DB schreiben
+#agt
+echo "Aus Datenbank entfernen?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+	    echo ""		
+	    echo "Speichere neuen Termin in Datenbank.."
+			psql -P pager=off -d $database -U $username -c "UPDATE atemschutzstrecke SET "$teilnehmer"=NULL WHERE "termin"='$datum $uhrzeit';"
+			# geschriebene daten von db lesen
+			echo ""
+			echo "Folgenden Termin in Datenbank erstellt:"
+			echo "----------------------"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutzstrecke WHERE termin='$datum $uhrzeit';"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und speichere nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
