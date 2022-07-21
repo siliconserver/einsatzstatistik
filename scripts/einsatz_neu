@@ -111,7 +111,7 @@ if [[ $eingesetzt = true ]]
 		#funktion
 		echo "Funktion im Einsatz: "
 		PS3='Bitte auswählen: '
-		options=("TM" "AGT" "FEZ" "MA" "GF" "EL")
+		options=("TM" "AGT" "CSA" "FEZ" "MA" "GF" "EL")
 		select funktion in "${options[@]}"
 		do
 			case $funktion in
@@ -120,6 +120,10 @@ if [[ $eingesetzt = true ]]
 					break
 					;;
 				"AGT")
+					echo "Du hast $funktion ausgewählt."
+					break
+					;;
+				"CSA")
 					echo "Du hast $funktion ausgewählt."
 					break
 					;;
@@ -151,7 +155,7 @@ if [[ $eingesetzt = true ]]
 			#einsatzmittel
 			echo "Einsatzmittel im Einsatz: "
 			PS3='Bitte auswählen: '
-			options=("HLF20" "HLF10" "DLK" "MTF" "WLF" "ELW" "GW-Mess")
+			options=("HLF20" "HLF10" "DLK" "MTF" "WLF" "WLF-K" "ELW" "GW-Mess" "MZF" "MZB")
 			select einsatzmittel in "${options[@]}"
 			do
 				case $einsatzmittel in
@@ -170,19 +174,31 @@ if [[ $eingesetzt = true ]]
 					"MTF")
 						echo "Du hast $einsatzmittel ausgewählt."
 						break
-						;;            
+						;;
 					"WLF")
 						echo "Du hast $einsatzmittel ausgewählt."
 						break
-						;;            
+						;;
+					"WLF-K")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;
 					"ELW")
 						echo "Du hast $einsatzmittel ausgewählt."
 						break
-						;;            
+						;;
 					"GW-Mess")
 						echo "Du hast $einsatzmittel ausgewählt."
 						break
-						;;            
+						;;
+					"MZF")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;
+					"MZB")
+						echo "Du hast $einsatzmittel ausgewählt."
+						break
+						;;
 					*) echo "Ungültige Option: $REPLY";;
 				esac
 			done
@@ -203,29 +219,61 @@ if [[ $funktion = AGT ]]
 		  	[Nn]* ) angeschnauft="false"; break;;
 	  	esac
 	  done
+	 # angeschnauft abfrage geraeteart
+	if [[ $angeschnauft = true ]]
+		then
+			#agt
+			echo "Geräteart im Einsatz: "
+			PS3='Bitte auswählen: '
+			options=("PA" "Filter")
+			select agt in "${options[@]}"
+			do
+				case $agt in
+					"PA")
+						echo "Du hast $agt ausgewählt."
+						break
+						;;
+					"Filter")
+						echo "Du hast $agt ausgewählt."
+						break
+						;;
+					*) echo "Ungültige Option: $REPLY";;
+				esac
+		done
+	fi
+
 fi
 
-# angeschnauft abfrage geraeteart
-if [[ $angeschnauft = true ]]
+# csa abfrage
+if [[ $funktion = CSA ]]
 	then
-		#agt
-		echo "Geräteart im Einsatz: "
-		PS3='Bitte auswählen: '
-		options=("PA" "Filter")
-		select agt in "${options[@]}"
-		do
-			case $agt in
-				"PA")
-					echo "Du hast $agt ausgewählt."
-					break
-					;;
-				"Filter")
-					echo "Du hast $agt ausgewählt."
-					break
-					;;
-				*) echo "Ungültige Option: $REPLY";;
-			esac
-		done
+	angeschnauft="true"
+	# abfrage csa-art
+	if [[ $angeschnauft = true ]]
+		then
+			#csa
+			echo "CSA im Einsatz: "
+			PS3='Bitte auswählen: '
+			options=("CSA Form 2+Filter" "CSA Form 2+PA" "CSA Form 3")
+			select agt in "${options[@]}"
+			do
+				case $agt in
+					"CSA Form 2+Filter")
+						echo "Du hast $agt ausgewählt."
+						break
+						;;
+					"CSA Form 2+PA")
+						echo "Du hast $agt ausgewählt."
+						break
+						;;
+					"CSA Form 3")
+						echo "Du hast $agt ausgewählt."
+						break
+						;;
+					*) echo "Ungültige Option: $REPLY";;
+				esac
+			done
+	fi
 fi
 
 echo ""
@@ -235,7 +283,7 @@ if [[ $art == "Brand" ]]
 		#alarmierungbrand
 		echo "Einsatzstichwort: "
 		PS3='Bitte auswählen: '
-		options=("Balkonbrand" "BMA Alarm" "Brand Allgemein" "Dachstuhlbrand" "Flächenbrand groß" "Flächenbrand klein" "Gartenhausbrand" "Gebäudebrand" "Grillbrand" "Holzstapelbrand" "Kaminbrand" "Kellerbrand" "LKW Brand" "Mülleimerbrand" "PKW Brand" "Privater Rauchmelder" "Rauchentwicklung im Freien unklar" "Rauchentwicklung im Gebäude unklar" "Wohnungsbrand" "Zimmerbrand")
+		options=("Balkonbrand" "BMA Alarm" "Brand Allgemein" "Dachstuhlbrand" "Flächenbrand groß" "Flächenbrand klein" "Gartenhausbrand" "Gebäudebrand" "Grillbrand" "Holzstapelbrand" "Kaminbrand" "Kellerbrand" "LKW Brand" "Mülleimerbrand" "PKW Brand" "Privater Rauchmelder" "Rauchentwicklung im Freien unklar" "Rauchentwicklung im Gebäude unklar" "Wohnungsbrand" "Zimmerbrand" "Waldbrand")
 		select alarmierung in "${options[@]}"
 		do
 			case $alarmierung in
@@ -319,6 +367,10 @@ if [[ $art == "Brand" ]]
 					echo "Du hast $alarmierung ausgewählt."
 					break
 					;;
+				"Waldbrand")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
 				*) echo "Ungültige Option: $REPLY";;
 			esac
 		done
@@ -329,7 +381,7 @@ if [[ $art == "TH" ]]
 		#alarmierungth
 		echo "Einsatzstichwort: "
 		PS3='Bitte auswählen: '
-		options=("Notfalltüröffnung" "Person eingeklemmt" "Person in Aufzug" "Person in Wasser" "Personensuche" "Schiffshavarie" "Tierrettung" "TH Allgemein" "Unterstützung POL" "Unterstützung RD" "VU" "Wasser in Gebäude")
+		options=("Notfalltüröffnung" "Person eingeklemmt" "Person in Aufzug" "Person in Wasser" "Personensuche" "Schiffshavarie" "Tierrettung" "TH Allgemein" "Unterstützung POL" "Unterstützung RD" "VU" "Wasser in Gebäude" "Baum auf Straße")
 		select alarmierung in "${options[@]}"
 		do
 			case $alarmierung in
@@ -348,15 +400,15 @@ if [[ $art == "TH" ]]
 				"Person in Wasser")
 					echo "Du hast $alarmierung ausgewählt."
 					break
-					;;                        
+					;;
 				"Personensuche")
 					echo "Du hast $alarmierung ausgewählt."
 					break
-					;;                        
+					;;
 				"Schiffshavarie")
 					echo "Du hast $alarmierung ausgewählt."
 					break
-					;;                        
+					;;
 				"Tierrettung")
 					echo "Du hast $alarmierung ausgewählt."
 					break
@@ -364,23 +416,27 @@ if [[ $art == "TH" ]]
 				"TH Allgemein")
 					echo "Du hast $alarmierung ausgewählt."
 					break
-					;;                        
+					;;
 				"Unterstützung POL")
 					echo "Du hast $alarmierung ausgewählt."
 					break
-					;;                        
+					;;
 				"Unterstützung RD")
 					echo "Du hast $alarmierung ausgewählt."
 					break
-					;;                        
+					;;
 				"VU")
 					echo "Du hast $alarmierung ausgewählt."
 					break
-					;;                        
+					;;
 				"Wasser in Gebäude")
 					echo "Du hast $alarmierung ausgewählt."
 					break
-					;;                        
+					;;
+				"Baum auf Straße")
+					echo "Du hast $alarmierung ausgewählt."
+					break
+					;;
 				*) echo "Ungültige Option: $REPLY";;
 			esac
 		done
