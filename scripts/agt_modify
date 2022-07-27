@@ -1,0 +1,613 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+d=`date +%Y-%m-%d`
+
+echo ""
+echo "AGT bearbeiten"
+echo "-------------"
+echo ""
+
+# einlesen der daten
+echo "Vorname: "
+read vorname
+echo ""
+echo "Nachname: "
+read name
+echo ""
+echo "Aaah, $vorname $name - na klar!"
+# checken was editiert werden soll
+echo "OK. Was soll geändert werden?"
+PS3='Bitte auswählen: '
+options=("G26" "Belastungsübung" "Letzer PA-Einsatz" "Letzter CSA-Einsatz" "PA-Tauglichkeit" "CSA-Tauglichkeit" "Arigon" "Kommentar" "PA-Lehrgang" "CSA-Lehrgang" "AGT Aktiv" "Exit")
+select grund in "${options[@]}"
+do
+	case $grund in
+		"G26")
+			echo "Du möchtest die $grund von $vorname ändern. OK!"
+			echo ""
+			#g26 anzeigen
+			echo "Übersicht aktuelle G 26.3 und Tauglichkeit von $vorname $name"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT g26von, g26bis, patauglich FROM atemschutz WHERE vorname='$vorname' AND name='$name';"
+			echo ""
+			#g26 ändern
+			echo "Neue Untersuchung nach G 26.3 für $vorname $name eintragen:"
+			echo ""
+			echo "G26.3 von (JJJJ-MM-TT):"
+			read g26von
+			echo ""
+			echo "G26.3 bis (JJJJ-MM-TT):"
+			read g26bis
+			echo ""
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "G26.3 von: $g26von"
+			echo "G26.3 bis: $g26bis"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""
+            			echo "Speichere $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET g26von='$g26von' WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET g26bis='$g26bis' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT g26von, g26bis FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"Belastungsübung")
+			echo "Du möchtest die $grund von $vorname ändern. OK!"
+			echo ""
+			#belastungsübung anzeigen
+			echo "Übersicht letzter und nächster Termin für die Belastungsübung von $vorname $name"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT lastbelastung, nextbelastung FROM atemschutz WHERE vorname='$vorname' AND name='$name';"
+			echo ""
+			#belastungsübung ändern
+			echo "Neuen Termin für die Belastungsübung für $vorname $name eintragen:"
+			echo ""
+			echo "Letzte Belastungsübung (JJJJ-MM-TT):"
+			read lastbelastung
+			echo ""
+			echo "Nächste Belastungsübung (JJJJ-MM-TT):"
+			read nextbelastung
+			echo ""
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "Letzte Belastungsübung: $lastbelastung"
+			echo "Nächste Belastungsübung: $nextbelastung"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Speichere $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET lastbelastung='$lastbelastung' WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET nextbelastung='$nextbelastung' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT lastbelastung, nextbelastung FROM atemschutz WHERE name='$name' AND vorname='$vorname' ;"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"Letzter PA-Einsatz")
+			echo "Du möchtest den $grund von $vorname ändern. OK!"
+			echo ""
+			#letzten pa-einsatz anzeigen
+			echo "Letzter PA-Einsatz von $vorname $name"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT lasteinsatz FROM atemschutz WHERE name='$name' AND vorname='$vorname' ;"
+			echo ""
+			#letzten pa-einsatz ändern
+			echo "PA-Einsatz für $vorname $name eintragen:"
+			echo ""
+			echo "PA-Einsatz am (JJJJ-MM-TT):"
+			read lasteinsatz
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "Letzter PA-Einsatz: $lasteinsatz"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Speichere $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET lasteinsatz='$lasteinsatz' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT lasteinsatz FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"Letzter CSA-Einsatz")
+			echo "Du möchtest den $grund von $vorname ändern. OK!"
+			echo ""
+			#letzten csa-einsatz anzeigen
+			echo "Letzter CSA-Einsatz von $vorname $name"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT lastcsaeinsatz FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			echo ""
+			#letzten csa-einsatz ändern
+			echo "CSA-Einsatz für $vorname $name eintragen:"
+			echo ""
+			echo "CSA-Einsatz am (JJJJ-MM-TT):"
+			read lastcsaeinsatz
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "Letzter CSA-Einsatz: $lastcsaeinsatz"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Speichere $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET lastcsaeinsatz='$lastcsaeinsatz' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT lastcsaeinsatz FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"PA-Tauglichkeit")
+			echo "Du möchtest die $grund von $vorname ändern. OK!"
+			echo ""
+			#aktuelle pa-tauglichkeit anzeigen
+			echo "Aktuelle $grund von $vorname $name"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT patauglich FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			echo ""
+			#pa-tauglichkeit ändern
+			while true; do
+				read -p "PA Tauglich? (Yy/Nn): " yn
+				case $yn in
+					[Yy]* ) patauglich="true"; break;;
+					[Nn]* ) patauglich="false"; break;;
+					* ) echo "Antwort mit Y oder N!.";;
+				esac
+			done
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "PA-Tauglichkeit: $patauglich"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Ändere $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET patauglich='$patauglich' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT patauglich FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"CSA-Tauglichkeit")
+			echo "Du möchtest die $grund von $vorname ändern. OK!"
+			echo ""
+			#aktuelle csa-tauglichkeit anzeigen
+			echo "Aktuelle $grund von $vorname $name"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT csatauglich FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			echo ""
+			#csa-tauglichkeit ändern
+			while true; do
+				read -p "CSA Tauglich? (Yy/Nn): " yn
+				case $yn in
+					[Yy]* ) csatauglich="true"; break;;
+					[Nn]* ) csatauglich="false"; break;;
+					* ) echo "Antwort mit Y oder N!.";;
+				esac
+			done
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "CSA-Tauglichkeit: $csatauglich"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Ändere $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET csatauglich='$csatauglich' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT csatauglich FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"Arigon")
+			echo "Du möchtest den $grund Status von $vorname ändern. OK!"
+			echo ""
+			#aktuellen arigon-status anzeigen
+			echo "Aktueller $grund Status von $vorname $name"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT arigon FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			echo ""
+			#arigon-status ändern
+			while true; do
+				read -p "Arigon Status OK? (Yy/Nn): " yn
+				case $yn in
+					[Yy]* ) arigon="true"; break;;
+					[Nn]* ) arigon="false"; break;;
+					* ) echo "Antwort mit Y oder N!.";;
+				esac
+			done
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "Arigon Status: $arigon"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Ändere $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET arigon='$arigon' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT arigon FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"Kommentar")
+			echo "Du möchtest den $grund von $vorname ändern. OK!"
+			echo ""
+			#aktuellen arigon-status anzeigen
+			echo "Aktueller $grund von $vorname $name"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT kommentar FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			echo ""
+			#arigon-status ändern
+			echo "Neuen $grund für $vorname $name eintragen:"
+			echo ""
+			read kommentar
+			echo ""
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "Kommentar: $kommentar"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Ändere $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET kommentar='$kommentar' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT kommentar FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"PA-Lehrgang")
+			echo "Du möchtest das Datum von $vorname's $grund ändern. OK!"
+			echo ""
+			#datum vom agtlehrgang anzeigen
+			echo "$grund von $vorname $name am"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT agtlehrgang FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			echo ""
+			#datum vom agtlehrgang ändern
+			echo "$grund für $vorname $name ändern:"
+			echo ""
+			echo "$grund am (JJJJ-MM-TT):"
+			read agtlehrgang
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "$grund: $agtlehrgang"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Speichere neue $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET agtlehrgang='$agtlehrgang' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT agtlehrgang FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"CSA-Lehrgang")
+			echo "Du möchtest das Datum von $vorname's $grund ändern. OK!"
+			echo ""
+			#datum vom csalehrgang anzeigen
+			echo "$grund von $vorname $name am"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT csalehrgang FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			echo ""
+			#datum vom csalehrgang ändern
+			echo "$grund für $vorname $name ändern:"
+			echo ""
+			echo "$grund am (JJJJ-MM-TT):"
+			read csalehrgang
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "$grund: $csalehrgang"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Speichere neue $grund in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET csalehrgang='$csalehrgang' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT csalehrgang FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"AGT Aktiv")
+			echo "Du möchtest den $grund Status von $vorname ändern. OK!"
+			echo ""
+			#aktuellen arigon-status anzeigen
+			echo "Aktueller $grund Status von $vorname $name"
+			echo "-------------"
+			psql -P pager=off -d $database -U $username -c "SELECT agtaktiv FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			echo ""
+			#arigon-status ändern
+			while true; do
+				read -p "AGT Aktiv? (Yy/Nn): " yn
+				case $yn in
+					[Yy]* ) agtaktiv="true"; break;;
+					[Nn]* ) agtaktiv="false"; break;;
+					* ) echo "Antwort mit Y oder N!.";;
+				esac
+			done
+			echo ""
+			#übersicht eingabe
+			echo "Übersicht neuer Daten:"
+			echo "--------------------"
+			echo "Name: $name"
+			echo "Vorname: $vorname"
+			echo "AGT Status: $agtaktiv"
+			echo "--------------------"
+			echo ""
+			# Frage ob in DB schreiben
+			echo "In Datenbank schreiben?: "
+			PS3='Bitte auswählen: '
+			options=("OK" "Nee, doch nicht!")
+			select save in "${options[@]}"
+			do
+    			case $save in
+        			"OK")
+            			echo "Du hast $save ausgewählt."
+            			echo ""             
+            			echo "Ändere $grund Status in Datenbank.."
+			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET agtaktiv='$agtaktiv' WHERE name='$name' AND vorname='$vorname';"
+                        			# geschriebene daten von db lesen
+                        			echo ""
+                        			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+                        			echo "----------------------"
+                        			psql -P pager=off -d $database -U $username -c "SELECT agtaktiv FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+            			break
+						;;
+        			"Nee, doch nicht!")
+            			echo "Breche ab und speichere nichts in die Datenbank."
+            			break
+            			;;
+        			*) echo "Ungültige Option: $REPLY";;
+    			esac
+			done
+			break
+			;;
+		"Exit")
+			echo "Bye!"
+			break
+			;;
+		*) echo "Ungültige Option: $REPLY";;
+	esac
+done

@@ -1,0 +1,75 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+d=`date +%Y-%m-%d`
+
+echo ""
+echo "AGT neue G26.3 zuweisen"
+echo "-------------"
+echo ""
+
+# einlesen der daten
+echo "Vorname: "
+read vorname
+echo ""
+echo "Nachname: "
+read name
+echo ""
+
+echo "Übersicht aktuelle G 26.3 und Tauglichkeit von $vorname $name"
+echo "-------------"
+psql -P pager=off -d $database -U $username -c "SELECT g26von, g26bis, patauglich, csatauglich FROM atemschutz WHERE vorname='$vorname' and name='$name';"
+echo ""
+echo ""
+
+#g26 ändern
+echo "Neue Untersuchung nach G 26.3 für $vorname $name eintragen:"
+echo ""
+echo "G26.3 von Datum:"
+read g26von
+echo ""
+echo "G26.3 bis Datum:"
+read g26bis
+echo ""
+
+
+# übersicht eingegebene daten
+echo "Übersicht neuer Daten:"
+echo "--------------------"
+echo "Name: $name"
+echo "Vorname: $vorname"
+echo "G26.3 von: $g26von"
+echo "G26.3 bis: $g26bis"
+echo "--------------------"
+echo ""
+# Frage ob in DB schreiben
+#agt
+echo "In Datenbank schreiben?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+	    echo ""
+	    echo "Speichere neue G26 in Datenbank.."
+			psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET g26von='$g26von' WHERE name='$name' AND vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET g26bis='$g26bis' WHERE name='$name' AND vorname='$vorname';"
+			# geschriebene daten von db lesen
+			echo ""
+			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
+			echo "----------------------"
+			psql -P pager=off -d $database -U $username -c "SELECT g26von, g26bis, patauglich, csatauglich FROM atemschutz WHERE vorname='$vorname' and name='$name';"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und speichere nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
