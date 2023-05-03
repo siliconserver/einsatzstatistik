@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+
+echo "Letzte Fahrten"
+echo "-------------"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM fahrten ORDER BY nummer DESC LIMIT 10;"
+echo ""
+echo ""
+echo "Fahrt entfernen"
+echo "-------------"
+echo ""
+
+# einlesen der daten
+echo "Fahrt Nummer z.B. 4 : "
+read nummer
+echo ""
+
+# übersicht eingegebene daten
+echo "Ausgewählte Fahrt löschen:"
+echo "--------------------"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM fahrten WHERE nummer='$nummer';"
+echo "--------------------"
+echo ""
+
+# Frage ob aus DB löschen
+echo "Fahrt löschen?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+            echo ""		
+            echo "Lösche Fahrt aus Datenbank.."
+            psql -P pager=off -d $database -U $username -c "DELETE FROM fahrten WHERE nummer='$nummer';"
+            echo ""
+            echo "Fahrt gelöscht"
+            echo "----------------------"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und lösche nichts aus der Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done

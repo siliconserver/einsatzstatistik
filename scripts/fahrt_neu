@@ -1,0 +1,179 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+beginn=18:00:00
+ende=19:30:00
+d=`date +%Y-%m-%d`
+
+echo "Letzte Fahrt"
+echo "-------------"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM fahrten ORDER BY nummer DESC LIMIT 1;"
+echo ""
+echo ""
+echo "Neue Fahrt"
+echo "-------------"
+echo "Nummer:"
+read nummer
+echo ""
+echo "Fahrzeug:"
+PS3='Bitte auswählen: '
+options=("DLK" "ELW1" "GW-Mess" "HLF10" "HLF20" "MTF" "MZB" "MZF1" "WLF-K" "WLF" "Dienstfahrzeug-GW" "Drohne")
+select einsatzmittel in "${options[@]}"
+do
+    case $einsatzmittel in
+        "DLK")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "ELW1")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "GW-Mess")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "HLF10")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "HLF20")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "MTF")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "MZB")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "MZF1")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "WLF-K")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "WLF")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "Dienstfahrzeug-GW")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        "Drohne")
+            echo "Du hast $einsatzmittel ausgewählt."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
+# einlesen der daten
+echo "Auswahl Datum:"
+# auswahl Y/N ob aktueller Tag als Datum
+while true; do
+	read -p "Aktuellen Tag ($d) als Datum verwenden? (Yy/Nn): " yn
+	case $yn in
+		[Yy]* ) datum=$d; break;;
+		[Nn]* ) datum=manual; break;;
+		* ) echo "Antwort mit Y oder N!.";;
+	esac
+done
+if [[ $datum = manual ]]
+	then
+		#funktion
+		echo "Datum z.B. 2019-05-25 :"
+		read datum
+fi
+echo ""
+echo "Stunden (z.B. 1.5):"
+read stunden
+echo ""
+echo "Unterzeichner:"
+read unterzeichner
+echo ""
+echo "Zweck (z.B. Übung):"
+PS3='Bitte auswählen: '
+options=("Einsatz" "Übung" "MA-Übung" "Lehrgang" "Sonstiges")
+select zweck in "${options[@]}"
+do
+    case $zweck in
+        "Einsatz")
+            echo "Du hast $zweck ausgewählt."
+            break
+            ;;
+        "Übung")
+            echo "Du hast $zweck ausgewählt."
+            break
+            ;;
+        "MA-Übung")
+            echo "Du hast $zweck ausgewählt."
+            break
+            ;;
+        "Lehrgang")
+            echo "Du hast $zweck ausgewählt."
+            break
+            ;;
+        "Sonstiges")
+            echo "Du hast $zweck ausgewählt."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
+
+echo ""
+echo "Ort z.B. Woerth :"
+read ort
+echo ""
+echo "Bemerkungen : "
+read bemerkungen
+echo ""
+
+# übersicht eingegebene daten
+echo "Übersicht Fahrt:"
+echo "--------------------"
+echo "Nummer: $nummer"
+echo "Fahrzeug: $einsatzmittel"
+echo "Datum: $datum"
+echo "Stunden: $stunden"
+echo "Unterzeichner: $unterzeichner"
+echo "Zweck: $zweck"
+echo "Ort: $ort"
+echo "Bemerkungen: $bemerkungen"
+echo "--------------------"
+echo ""
+
+# Frage ob in DB schreiben
+echo "In Datenbank schreiben?: "
+PS3='Bitte auswählen: '
+options=("OK" "Nee, doch nicht!")
+select save in "${options[@]}"
+do
+    case $save in
+        "OK")
+            echo "Du hast $save ausgewählt."
+	    echo ""		
+	    echo "Schreibe Fahrt in Datenbank.."
+        psql -P pager=off -d $database -U $username -c "INSERT INTO fahrten (nummer,einsatzmittel,stunden,date,unterzeichner,zweck,ort,bemerkungen) VALUES ('$nummer', '$einsatzmittel', '$stunden', '$datum', '$unterzeichner', '$zweck',  '$ort', '$bemerkungen');"
+			# geschriebene daten von db lesen
+			echo ""
+			echo "Folgende Fahrt erfolgreich in Datenbank geschrieben:"
+			echo "----------------------"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM fahrten WHERE nummer='$nummer';"
+            break
+            ;;
+        "Nee, doch nicht!")
+            echo "Breche ab und speichere nichts in die Datenbank."
+            break
+            ;;
+        *) echo "Ungültige Option: $REPLY";;
+    esac
+done
