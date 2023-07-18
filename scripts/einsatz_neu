@@ -17,9 +17,23 @@ echo "-------------"
 echo ""
 
 # einlesen der daten
-echo "Einsatz Nummer z.B. 104 : "
-read nummer
-echo ""
+
+# auswahl Y/N ob Einsatznummer Auto-Increment
+while true; do
+        read -p "Einsatznummer automatisch auf basis des letzten Einsatzes hochzählen? (Yy/Nn): " yn
+        case $yn in
+                [Yy]* ) 
+			nummer=$(psql -P pager=off -d $database -U $username -c "SELECT nummer FROM einsaetze ORDER BY nummer DESC LIMIT 1;" | head -3 | tail -1 | awk '{$1=$1};1')
+			echo "Letzter Einsatz hatte Nummer $nummer"
+			nummer=$((nummer+1))
+			echo "Nutze $nummer als Einsatznummer für diesen Einsatz.";
+			break;;
+                [Nn]* ) 
+			echo "Einsatz Nummer z.B. 104 : "
+			read nummer; break;;
+                * ) echo "Antwort mit Y oder N!.";;
+        esac
+done
 
 echo "Auswahl Startdatum:"
 # auswahl Y/N ob aktueller Tag als Datum
