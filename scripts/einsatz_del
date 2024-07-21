@@ -7,7 +7,7 @@ database=feuerwehr
 
 echo "Letzter Einsatz"
 echo "-------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM einsaetze ORDER BY nummer DESC LIMIT 1;"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.einsaetze ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Einsatz löschen"
@@ -22,7 +22,7 @@ echo ""
 # übersicht eingegebene daten
 echo "Ausgewählter Einsatz zum löschen:"
 echo "--------------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM einsaetze WHERE nummer='$nummer';"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.einsaetze WHERE nummer='$nummer';"
 echo "--------------------"
 echo ""
 
@@ -37,7 +37,7 @@ do
             echo "Du hast $save ausgewählt."
             echo ""		
             echo "Lösche Einsatz aus Datenbank.."
-            psql -P pager=off -d $database -U $username -c "DELETE FROM einsaetze WHERE nummer='$nummer';"
+            psql -P pager=off -d $database -U $username -c "DELETE FROM $database.einsaetze WHERE nummer='$nummer';"
             echo ""
             echo "Einsatz gelöscht"
             echo "----------------------"

@@ -7,7 +7,7 @@ database=feuerwehr
 
 echo "Letzter Meilenstein"
 echo "-------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM meilensteine ORDER BY nummer DESC LIMIT 1;"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.meilensteine ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Meilenstein entfernen"
@@ -22,7 +22,7 @@ echo ""
 # übersicht eingegebene daten
 echo "Ausgewählter Meilenstein zum löschen:"
 echo "--------------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM meilensteine WHERE nummer='$nummer';"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.meilensteine WHERE nummer='$nummer';"
 echo "--------------------"
 echo ""
 
@@ -37,7 +37,7 @@ do
             echo "Du hast $save ausgewählt."
             echo ""		
             echo "Lösche Meilenstein aus Datenbank.."
-            psql -P pager=off -d $database -U $username -c "DELETE FROM meilensteine WHERE nummer='$nummer';"
+            psql -P pager=off -d $database -U $username -c "DELETE FROM $database.meilensteine WHERE nummer='$nummer';"
             echo ""
             echo "Meilenstein gelöscht"
             echo "----------------------"

@@ -9,7 +9,7 @@ d=`date +%Y-%m-%d`
 echo ""
 echo "Letzter Einsatz"
 echo "-------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM einsaetze ORDER BY nummer DESC LIMIT 1;"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.einsaetze ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Neuer Einsatz"
@@ -23,7 +23,7 @@ while true; do
         read -p "Einsatznummer automatisch auf basis des letzten Einsatzes hochzählen? (Yy/Nn): " yn
         case $yn in
                 [Yy]* ) 
-			nummer=$(psql -P pager=off -d $database -U $username -c "SELECT nummer FROM einsaetze ORDER BY nummer DESC LIMIT 1;" | head -3 | tail -1 | awk '{$1=$1};1')
+			nummer=$(psql -P pager=off -d $database -U $username -c "SELECT nummer FROM $database.einsaetze ORDER BY nummer DESC LIMIT 1;" | head -3 | tail -1 | awk '{$1=$1};1')
 			echo "Letzter Einsatz hatte Nummer $nummer"
 			nummer=$((nummer+1))
 			echo "Nutze $nummer als Einsatznummer für diesen Einsatz.";
@@ -557,20 +557,20 @@ do
 	    echo "Schreibe Einsatz in Datenbank.."
 			if [[ $funktion = AGT ]]
 			then
-			psql -P pager=off -d $database -U $username -c "INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel,angeschnauft,agt) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel', '$angeschnauft', '$agt');"
+			psql -P pager=off -d $database -U $username -c "INSERT INTO $database.einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel,angeschnauft,agt) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel', '$angeschnauft', '$agt');"
 			else
-			psql -P pager=off -d $database -U $username -c "INSERT INTO einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel');"
+			psql -P pager=off -d $database -U $username -c "INSERT INTO $database.einsaetze (nummer,start,ende,ort,art,funktion,eingesetzt,alarmierung,bemerkungen,einsatzmittel) VALUES ('$nummer', '$beginn $beginnzeit', '$ende $endzeit', '$ort', '$art', '$funktion', '$eingesetzt', '$alarmierung', '$bemerkungen', '$einsatzmittel');"
 			fi
 			# null von agt korrigieren
 			if [[ $angeschnauft = false ]]
 				then
-				  psql -P pager=off -d $database -U $username -c "UPDATE einsaetze SET "agt"=NULL WHERE "nummer"='$nummer';"
+				  psql -P pager=off -d $database -U $username -c "UPDATE $database.einsaetze SET "agt"=NULL WHERE "nummer"='$nummer';"
 			fi
 			# geschriebene daten von db lesen
 			echo ""
 			echo "Folgenden Einsatz erfolgreich in Datenbank geschrieben:"
 			echo "----------------------"
-			psql -P pager=off -d $database -U $username -c "SELECT * FROM einsaetze WHERE nummer='$nummer';"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.einsaetze WHERE nummer='$nummer';"
             break
             ;;
         "Nee, doch nicht!")

@@ -10,7 +10,7 @@ d=`date +%Y-%m-%d`
 
 echo "Letzte Übung"
 echo "-------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM uebungen ORDER BY nummer DESC LIMIT 1;"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.uebungen ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Neue Übung"
@@ -166,12 +166,12 @@ do
             echo "Du hast $save ausgewählt."
 	    echo ""		
 	    echo "Schreibe Übung in Datenbank.."
-        psql -P pager=off -d $database -U $username -c "INSERT INTO uebungen (nummer,start,ende,ort,thema,teilnahme,bemerkungen) VALUES ('$nummer', '$datum $beginn', '$datum $ende', '$ort', '$thema', '$teilnahme', '$bemerkungen');"
+        psql -P pager=off -d $database -U $username -c "INSERT INTO $database.uebungen (nummer,start,ende,ort,thema,teilnahme,bemerkungen) VALUES ('$nummer', '$datum $beginn', '$datum $ende', '$ort', '$thema', '$teilnahme', '$bemerkungen');"
 			# geschriebene daten von db lesen
 			echo ""
 			echo "Folgende Übung erfolgreich in Datenbank geschrieben:"
 			echo "----------------------"
-			psql -P pager=off -d $database -U $username -c "SELECT * FROM uebungen WHERE nummer='$nummer';"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.uebungen WHERE nummer='$nummer';"
             break
             ;;
         "Nee, doch nicht!")

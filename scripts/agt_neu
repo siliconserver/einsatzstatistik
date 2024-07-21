@@ -174,18 +174,18 @@ do
 			then
 				if [[ $csa = true ]]
 				then
-			psql -P pager=off -d $database -U $username -c "INSERT INTO atemschutz (name,vorname,agtlehrgang,csalehrgang,lastbelastung,nextbelastung,g26von,g26bis,lasteinsatz,lastcsaeinsatz,patauglich,csatauglich,arigon,agtaktiv,kommentar) VALUES ('$name', '$vorname', '$agtlehrgang', '$csalehrgang', '$lastbelastung', '$nextbelastung', '$lastg26', '$nextg26', '$lasteinsatz', '$lastcsaeinsatz', '$patauglich', '$csatauglich', '$arigon', '$agtaktiv', '$kommentar');"
+			psql -P pager=off -d $database -U $username -c "INSERT INTO $database.atemschutz (name,vorname,agtlehrgang,csalehrgang,lastbelastung,nextbelastung,g26von,g26bis,lasteinsatz,lastcsaeinsatz,patauglich,csatauglich,arigon,agtaktiv,kommentar) VALUES ('$name', '$vorname', '$agtlehrgang', '$csalehrgang', '$lastbelastung', '$nextbelastung', '$lastg26', '$nextg26', '$lasteinsatz', '$lastcsaeinsatz', '$patauglich', '$csatauglich', '$arigon', '$agtaktiv', '$kommentar');"
 				else
-			psql -P pager=off -d $database -U $username -c "INSERT INTO atemschutz (name,vorname,agtlehrgang,lastbelastung,nextbelastung,g26von,g26bis,lasteinsatz,patauglich,csatauglich,arigon,agtaktiv,kommentar) VALUES ('$name', '$vorname', '$agtlehrgang', '$lastbelastung', '$nextbelastung', '$lastg26', '$nextg26', '$lasteinsatz', '$patauglich', 'false', '$arigon', '$agtaktiv', '$kommentar');"
+			psql -P pager=off -d $database -U $username -c "INSERT INTO $database.atemschutz (name,vorname,agtlehrgang,lastbelastung,nextbelastung,g26von,g26bis,lasteinsatz,patauglich,csatauglich,arigon,agtaktiv,kommentar) VALUES ('$name', '$vorname', '$agtlehrgang', '$lastbelastung', '$nextbelastung', '$lastg26', '$nextg26', '$lasteinsatz', '$patauglich', 'false', '$arigon', '$agtaktiv', '$kommentar');"
 				fi
 			else
-			psql -P pager=off -d $database -U $username -c "INSERT INTO atemschutz (name,vorname,patauglich,csatauglich,agtaktiv,kommentar) VALUES ('$name', '$vorname', 'false', 'false', 'false', '$kommentar');"
+			psql -P pager=off -d $database -U $username -c "INSERT INTO $database.atemschutz (name,vorname,patauglich,csatauglich,agtaktiv,kommentar) VALUES ('$name', '$vorname', 'false', 'false', 'false', '$kommentar');"
 			fi
 			# geschriebene daten von db lesen
 			echo ""
 			echo "Folgenden AGT-Träger in Datenbank erstellt:"
 			echo "----------------------"
-			psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutz WHERE name='$name' and vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.atemschutz WHERE name='$name' and vorname='$vorname';"
             break
             ;;
         "Nee, doch nicht!")

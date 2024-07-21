@@ -32,7 +32,7 @@ do
 			#g26 anzeigen
 			echo "Übersicht aktuelle G 26.3 und Tauglichkeit von $vorname $name"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT g26von, g26bis, patauglich FROM atemschutz WHERE vorname='$vorname' AND name='$name';"
+			psql -P pager=off -d $database -U $username -c "SELECT g26von, g26bis, patauglich FROM $database.atemschutz WHERE vorname='$vorname' AND name='$name';"
 			echo ""
 			#g26 ändern
 			echo "Neue Untersuchung nach G 26.3 für $vorname $name eintragen:"
@@ -64,13 +64,13 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""
             			echo "Speichere $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET g26von='$g26von' WHERE name='$name' AND vorname='$vorname';"
-                        			psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET g26bis='$g26bis' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET g26von='$g26von' WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET g26bis='$g26bis' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT g26von, g26bis FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT g26von, g26bis FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -88,7 +88,7 @@ do
 			#belastungsübung anzeigen
 			echo "Übersicht letzter und nächster Termin für die Belastungsübung von $vorname $name"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT lastbelastung, nextbelastung FROM atemschutz WHERE vorname='$vorname' AND name='$name';"
+			psql -P pager=off -d $database -U $username -c "SELECT lastbelastung, nextbelastung FROM $database.atemschutz WHERE vorname='$vorname' AND name='$name';"
 			echo ""
 			#belastungsübung ändern
 			echo "Neuen Termin für die Belastungsübung für $vorname $name eintragen:"
@@ -120,13 +120,13 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Speichere $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET lastbelastung='$lastbelastung' WHERE name='$name' AND vorname='$vorname';"
-                        			psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET nextbelastung='$nextbelastung' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET lastbelastung='$lastbelastung' WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET nextbelastung='$nextbelastung' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT lastbelastung, nextbelastung FROM atemschutz WHERE name='$name' AND vorname='$vorname' ;"
+                        			psql -P pager=off -d $database -U $username -c "SELECT lastbelastung, nextbelastung FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname' ;"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -144,7 +144,7 @@ do
 			#letzten pa-einsatz anzeigen
 			echo "Letzter PA-Einsatz von $vorname $name"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT lasteinsatz FROM atemschutz WHERE name='$name' AND vorname='$vorname' ;"
+			psql -P pager=off -d $database -U $username -c "SELECT lasteinsatz FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname' ;"
 			echo ""
 			#letzten pa-einsatz ändern
 			echo "PA-Einsatz für $vorname $name eintragen:"
@@ -171,12 +171,12 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Speichere $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET lasteinsatz='$lasteinsatz' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET lasteinsatz='$lasteinsatz' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT lasteinsatz FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT lasteinsatz FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -194,7 +194,7 @@ do
 			#letzten csa-einsatz anzeigen
 			echo "Letzter CSA-Einsatz von $vorname $name"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT lastcsaeinsatz FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "SELECT lastcsaeinsatz FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
 			echo ""
 			#letzten csa-einsatz ändern
 			echo "CSA-Einsatz für $vorname $name eintragen:"
@@ -221,12 +221,12 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Speichere $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET lastcsaeinsatz='$lastcsaeinsatz' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET lastcsaeinsatz='$lastcsaeinsatz' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT lastcsaeinsatz FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT lastcsaeinsatz FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -244,7 +244,7 @@ do
 			#aktuelle pa-tauglichkeit anzeigen
 			echo "Aktuelle $grund von $vorname $name"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT patauglich FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "SELECT patauglich FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
 			echo ""
 			#pa-tauglichkeit ändern
 			while true; do
@@ -275,12 +275,12 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Ändere $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET patauglich='$patauglich' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET patauglich='$patauglich' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT patauglich FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT patauglich FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -298,7 +298,7 @@ do
 			#aktuelle csa-tauglichkeit anzeigen
 			echo "Aktuelle $grund von $vorname $name"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT csatauglich FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "SELECT csatauglich FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
 			echo ""
 			#csa-tauglichkeit ändern
 			while true; do
@@ -329,12 +329,12 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Ändere $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET csatauglich='$csatauglich' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET csatauglich='$csatauglich' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT csatauglich FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT csatauglich FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -352,7 +352,7 @@ do
 			#aktuellen arigon-status anzeigen
 			echo "Aktueller $grund Status von $vorname $name"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT arigon FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "SELECT arigon FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
 			echo ""
 			#arigon-status ändern
 			while true; do
@@ -383,12 +383,12 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Ändere $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET arigon='$arigon' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET arigon='$arigon' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT arigon FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT arigon FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -406,7 +406,7 @@ do
 			#aktuellen arigon-status anzeigen
 			echo "Aktueller $grund von $vorname $name"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT kommentar FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "SELECT kommentar FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
 			echo ""
 			#arigon-status ändern
 			echo "Neuen $grund für $vorname $name eintragen:"
@@ -433,12 +433,12 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Ändere $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET kommentar='$kommentar' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET kommentar='$kommentar' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT kommentar FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT kommentar FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -456,7 +456,7 @@ do
 			#datum vom agtlehrgang anzeigen
 			echo "$grund von $vorname $name am"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT agtlehrgang FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "SELECT agtlehrgang FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
 			echo ""
 			#datum vom agtlehrgang ändern
 			echo "$grund für $vorname $name ändern:"
@@ -483,12 +483,12 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Speichere neue $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET agtlehrgang='$agtlehrgang' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET agtlehrgang='$agtlehrgang' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT agtlehrgang FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT agtlehrgang FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -506,7 +506,7 @@ do
 			#datum vom csalehrgang anzeigen
 			echo "$grund von $vorname $name am"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT csalehrgang FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "SELECT csalehrgang FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
 			echo ""
 			#datum vom csalehrgang ändern
 			echo "$grund für $vorname $name ändern:"
@@ -533,12 +533,12 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Speichere neue $grund in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET csalehrgang='$csalehrgang' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET csalehrgang='$csalehrgang' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT csalehrgang FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT csalehrgang FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")
@@ -556,7 +556,7 @@ do
 			#aktuellen arigon-status anzeigen
 			echo "Aktueller $grund Status von $vorname $name"
 			echo "-------------"
-			psql -P pager=off -d $database -U $username -c "SELECT agtaktiv FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+			psql -P pager=off -d $database -U $username -c "SELECT agtaktiv FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
 			echo ""
 			#arigon-status ändern
 			while true; do
@@ -587,12 +587,12 @@ do
             			echo "Du hast $save ausgewählt."
             			echo ""             
             			echo "Ändere $grund Status in Datenbank.."
-			                        psql -P pager=off -d $database -U $username -c "UPDATE atemschutz SET agtaktiv='$agtaktiv' WHERE name='$name' AND vorname='$vorname';"
+			                        psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutz SET agtaktiv='$agtaktiv' WHERE name='$name' AND vorname='$vorname';"
                         			# geschriebene daten von db lesen
                         			echo ""
                         			echo "Folgenden Daten für $vorname $name in Datenbank aktualisiert:"
                         			echo "----------------------"
-                        			psql -P pager=off -d $database -U $username -c "SELECT agtaktiv FROM atemschutz WHERE name='$name' AND vorname='$vorname';"
+                        			psql -P pager=off -d $database -U $username -c "SELECT agtaktiv FROM $database.atemschutz WHERE name='$name' AND vorname='$vorname';"
             			break
 						;;
         			"Nee, doch nicht!")

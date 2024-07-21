@@ -7,7 +7,7 @@ database=feuerwehr
 
 echo "Letzte Fahrten"
 echo "-------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM fahrten ORDER BY nummer DESC LIMIT 10;"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.fahrten ORDER BY nummer DESC LIMIT 10;"
 echo ""
 echo ""
 echo "Fahrt entfernen"
@@ -22,7 +22,7 @@ echo ""
 # übersicht eingegebene daten
 echo "Ausgewählte Fahrt löschen:"
 echo "--------------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM fahrten WHERE nummer='$nummer';"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.fahrten WHERE nummer='$nummer';"
 echo "--------------------"
 echo ""
 
@@ -37,7 +37,7 @@ do
             echo "Du hast $save ausgewählt."
             echo ""		
             echo "Lösche Fahrt aus Datenbank.."
-            psql -P pager=off -d $database -U $username -c "DELETE FROM fahrten WHERE nummer='$nummer';"
+            psql -P pager=off -d $database -U $username -c "DELETE FROM $database.fahrten WHERE nummer='$nummer';"
             echo ""
             echo "Fahrt gelöscht"
             echo "----------------------"

@@ -13,7 +13,7 @@ echo ""
 
 echo "Terminübersicht"
 echo "-------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutzstrecke ORDER BY termin ASC LIMIT 9;"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.atemschutzstrecke ORDER BY termin ASC LIMIT 9;"
 echo ""
 echo ""
 
@@ -29,7 +29,7 @@ echo ""
 echo ""
 echo "Aktuelle Terminbelegung"
 echo "-------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutzstrecke WHERE termin='$datum $uhrzeit';"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.atemschutzstrecke WHERE termin='$datum $uhrzeit';"
 echo ""
 echo ""
 
@@ -86,12 +86,12 @@ do
             echo "Du hast $save ausgewählt."
 	    echo ""		
 	    echo "Speichere neuen Termin in Datenbank.."
-			psql -P pager=off -d $database -U $username -c "UPDATE atemschutzstrecke SET "$teilnehmer"=NULL WHERE "termin"='$datum $uhrzeit';"
+			psql -P pager=off -d $database -U $username -c "UPDATE $database.atemschutzstrecke SET "$teilnehmer"=NULL WHERE "termin"='$datum $uhrzeit';"
 			# geschriebene daten von db lesen
 			echo ""
 			echo "Folgenden Termin in Datenbank erstellt:"
 			echo "----------------------"
-			psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutzstrecke WHERE termin='$datum $uhrzeit';"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.atemschutzstrecke WHERE termin='$datum $uhrzeit';"
             break
             ;;
         "Nee, doch nicht!")

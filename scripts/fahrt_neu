@@ -10,7 +10,7 @@ d=`date +%Y-%m-%d`
 
 echo "Letzte Fahrt"
 echo "-------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM fahrten ORDER BY nummer DESC LIMIT 1;"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.fahrten ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Neue Fahrt"
@@ -162,12 +162,12 @@ do
             echo "Du hast $save ausgewählt."
 	    echo ""		
 	    echo "Schreibe Fahrt in Datenbank.."
-        psql -P pager=off -d $database -U $username -c "INSERT INTO fahrten (nummer,einsatzmittel,stunden,date,unterzeichner,zweck,ort,bemerkungen) VALUES ('$nummer', '$einsatzmittel', '$stunden', '$datum', '$unterzeichner', '$zweck',  '$ort', '$bemerkungen');"
+        psql -P pager=off -d $database -U $username -c "INSERT INTO $database.fahrten (nummer,einsatzmittel,stunden,date,unterzeichner,zweck,ort,bemerkungen) VALUES ('$nummer', '$einsatzmittel', '$stunden', '$datum', '$unterzeichner', '$zweck',  '$ort', '$bemerkungen');"
 			# geschriebene daten von db lesen
 			echo ""
 			echo "Folgende Fahrt erfolgreich in Datenbank geschrieben:"
 			echo "----------------------"
-			psql -P pager=off -d $database -U $username -c "SELECT * FROM fahrten WHERE nummer='$nummer';"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.fahrten WHERE nummer='$nummer';"
             break
             ;;
         "Nee, doch nicht!")

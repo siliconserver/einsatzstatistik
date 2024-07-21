@@ -8,7 +8,7 @@ d=`date +%Y-%m-%d`
 
 echo "Letzter Meilenstein"
 echo "-------------"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM meilensteine ORDER BY nummer DESC LIMIT 1;"
+psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.meilensteine ORDER BY nummer DESC LIMIT 1;"
 echo ""
 echo ""
 echo "Neuer Meilenstein"
@@ -63,11 +63,11 @@ do
             echo "Du hast $save ausgewählt."
 	        echo ""		
 	        echo "Schreibe Meilenstein in Datenbank.."
-            psql -P pager=off -d $database -U $username -c "INSERT INTO meilensteine (nummer,date,thema,bemerkungen) VALUES ('$nummer', '$datum', '$thema', '$bemerkungen');"
+            psql -P pager=off -d $database -U $username -c "INSERT INTO $database.meilensteine (nummer,date,thema,bemerkungen) VALUES ('$nummer', '$datum', '$thema', '$bemerkungen');"
 			echo ""
 			echo "Folgender Meilenstein erfolgreich in Datenbank geschrieben:"
 			echo "----------------------"
-			psql -P pager=off -d $database -U $username -c "SELECT * FROM meilensteine WHERE nummer='$nummer';"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.meilensteine WHERE nummer='$nummer';"
             break
             ;;
         "Nee, doch nicht!")

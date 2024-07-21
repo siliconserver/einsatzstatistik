@@ -39,12 +39,12 @@ do
             echo "Du hast $save ausgewählt."
 	    echo ""		
 	    echo "Speichere neuen Termin in Datenbank.."
-			psql -P pager=off -d $database -U $username -c "INSERT INTO atemschutzstrecke (termin) VALUES ('$datum $uhrzeit');"
+			psql -P pager=off -d $database -U $username -c "INSERT INTO $database.atemschutzstrecke (termin) VALUES ('$datum $uhrzeit');"
 			# geschriebene daten von db lesen
 			echo ""
 			echo "Folgenden Termin in Datenbank erstellt:"
 			echo "----------------------"
-			psql -P pager=off -d $database -U $username -c "SELECT * FROM atemschutzstrecke WHERE termin='$datum $uhrzeit';"
+			psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.atemschutzstrecke WHERE termin='$datum $uhrzeit';"
             break
             ;;
         "Nee, doch nicht!")
