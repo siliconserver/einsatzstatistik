@@ -25,13 +25,13 @@
 Contains several Grafana Dashboards as json Files. Can be easily imported in Grafana.
 
 **Einsatz Dashboard:**
-![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/alle-einsaetze.png?inline=false)
+![alt text](screenshots/alle-einsaetze.png)
 
 **Übungen Dashboard:**
-![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/uebungen.png?inline=false)
+![alt text](screenshots/uebungen.png)
 
 **Ausbildung Dashboard:**
-![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/ausbildungen.png?inline=false)
+![alt text](screenshots/ausbildungen.png)
 
 ## DB folder
 Contains the PostgreSQL initialdump for all the scripts and dashboards.
@@ -45,14 +45,14 @@ Shows the last DB row to may remind you what the new Einsatznummer would be.
 After you've entered the number, it will ask you about date and time, where it took place, kind, vehicle, your role, asks if you have worn SCBA and much more.  
   
 See an example here:  
-![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/einsatz_neu.gif?inline=false)
+![alt text](screenshots/einsatz_neu.gif)
 
 **Example Einsatz Delete:**  
 Shows the last DB row to may reming you which Einsatznummer you would like to delete.  
 Asks you only for the Einsatznummer and deletes the matching row from the database. 
   
 See an example here:  
-![alt text](https://gitlab.com/wurzelserver/einsatzstatistik/-/raw/master/screenshots/einsatz_del.gif?inline=false)
+![alt text](screenshots/einsatz_del.gif)
 
 ## License
 Everything published inside this repository is GPLv3. A credit would be nice, but is not needed.
