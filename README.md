@@ -55,4 +55,4 @@ See an example here:
 ![alt text](screenshots/einsatz_del.gif)
 
 ## License
-Everything published inside this repository is GPLv3. A credit would be nice, but is not needed.
+Everything published inside this repository is under MIT License.
