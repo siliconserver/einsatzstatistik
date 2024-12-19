@@ -6,50 +6,33 @@ username=root
 database=feuerwehr
 d=`date +%Y-%m-%d`
 
-echo "!!! Achtung - G 26.3 läuft bei folgenden Kameraden innerhalb 3 Monaten ab !!!"
+### Text Output
+echo "Wöchentliche Prüfung der Tauglichkeit, G26 und Belastungsübung."
 echo ""
+echo "Die G 26.3 läuft bei folgenden Kameraden innerhalb 3 Monaten ab:"
 psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis <= CURRENT_DATE + INTERVAL '3 months';"
-echo ""
-echo "??? Informiere betroffene AGT ???"
-echo ""
-echo ""
+echo "Hier gelistete AGT sollten informiert werden."
 
-echo "!!! Achtung - G 26.3 ist bei folgenden Kameraden abgelaufen !!!"
-echo ""
+echo "Die G 26.3 ist bei folgenden Kameraden abgelaufen:"
 psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis < CURRENT_DATE;"
-
-echo "### Hierbei gibts keine Ausreden, setze sie auf untauglich ###"
-echo ""
 psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET patauglich = FALSE WHERE g26bis < CURRENT_DATE;"
-echo ""
-echo "!!! AGT auf untauglich gesetzt !!!"
-echo ""
-echo ""
+echo "Hier gelistete AGT wurden auf untauglich gesetzt. AGT-Namensschild ist zu entfernen!"
 
-echo "!!! Achtung - Belastungsubung nicht innerhalb diesen oder letzten Jahres !!!"
-echo ""
+echo "Die Belastungsubung wurde von folgenden AGT nicht innerhalb diesen oder letzten Jahres abgelegt:"
 psql -P pager=off -d $database -U $username -c "SELECT name, vorname, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND EXTRACT(YEAR FROM lastbelastung) NOT IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1);"
-
-echo "### Ohne gehts nicht, setze sie auf untauglich ###"
-echo ""
 psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET patauglich = FALSE WHERE EXTRACT(YEAR FROM lastbelastung) NOT IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1);"
-echo "!!! AGT auf untauglich gesetzt !!!"
-echo ""
-echo ""
+echo "Hier gelistete AGT wurden auf untauglich gesetzt. AGT-Namensschild ist zu entfernen!"
 
-echo "+++ Sehr gut, aktuell taugliche AGT (sortiert nach G 26.3 Ablauf) +++"
-echo ""
+echo "Prüfe die Tauglichkeit der AGT und setze taugliche AGT auf tauglich.."
+psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET patauglich = TRUE WHERE EXTRACT(YEAR FROM lastbelastung) IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1) AND g26bis > CURRENT_DATE;"
+
+echo "Aktuell taugliche AGT (sortiert nach G 26.3 Ablauf):"
 psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND EXTRACT(YEAR FROM lastbelastung) IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1) AND g26bis > CURRENT_DATE ORDER BY g26bis ASC;"
 
-echo "--- Verbesserungsbedarf, aktuell taugliche AGT (sortiert nach G 26.3 Ablauf) ---"
-echo ""
+echo "Aktuell untaugliche AGT (sortiert nach G 26.3 Ablauf):"
 psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND patauglich = FALSE ORDER BY g26bis ASC;"
 
-echo "+++ Nicely done, setze AGT auf tauglich +++"
-echo ""
-psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET patauglich = TRUE WHERE EXTRACT(YEAR FROM lastbelastung) IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1) AND g26bis > CURRENT_DATE;"
-echo "+++ AGT auf tauglich gesetzt +++"
-echo ""
-echo ""
-echo "+--+ Aktuell taugliche AGT +--+"
+echo "Anzahl aktuell tauglicher AGT:"
 psql -P pager=off -d $database -U $username -c "SELECT COUNT(*) FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND patauglich = TRUE;"
+
+echo "Wöchentliche Prüfung der Tauglichkeit, G26 und Belastungsübung ist damit abgeschlossen."
