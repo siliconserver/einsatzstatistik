@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+d=`date +%Y-%m-%d`
+
+echo "nachste belastungsübun nicht dieses jahr"
+psql -P pager=off -d $database -U $username -c "SELECT name, vorname, nextbelastung, patauglich FROM feuerwehr.atemschutz WHERE EXTRACT(YEAR FROM nextbelastung) = EXTRACT(YEAR FROM CURRENT_DATE);"
+
+
+echo "letzte belastungsübung nicht dieses jahr"
+psql -P pager=off -d $database -U $username -c "SELECT name, vorname, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE EXTRACT(YEAR FROM lastbelastung) = EXTRACT(YEAR FROM CURRENT_DATE);"

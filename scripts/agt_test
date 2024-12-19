@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+d=`date +%Y-%m-%d`
+
+psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26von, g26bis, patauglich FROM feuerwehr.atemschutz;" -t -A  | while IFS="|" read -r column1 column2 column3 column4 column5; do
+if [ "$column5" = "t" ]; then
+	tauglich=ja
+else
+	tauglich=nein
+fi
+echo "$column1, $column2, G26 von $column3, G26 bis $column4, Tauglich: $tauglich"
+done

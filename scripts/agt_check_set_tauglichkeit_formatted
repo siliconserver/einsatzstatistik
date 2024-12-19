@@ -1,0 +1,59 @@
+#!/bin/bash
+#
+# variablen
+hostname=localhost
+username=root
+database=feuerwehr
+d=`date +%Y-%m-%d`
+
+echo "!!! Achtung - G 26.3 läuft bei folgenden Kameraden innerhalb 3 Monaten ab !!!"
+echo ""
+psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis <= CURRENT_DATE + INTERVAL '3 months';" -t -A | while IFS="|" read -r column1 column2 column3 column4; do
+	if [ "$column4" = "t" ]; then
+        	tauglich="tauglich"
+	else
+        	tauglich="untauglich"
+	fi
+echo "$column2 $column1, G 26.3 tauglich bis $column3, ist aktuell $tauglich"
+done
+
+echo ""
+echo "!!! Informiere betroffene AGT !!!"
+echo ""
+echo ""
+
+#echo "!!! Achtung - G 26.3 ist bei folgenden Kameraden abgelaufen !!!"
+#echo ""
+#psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis < CURRENT_DATE;"
+#
+#echo "!!! Hierbei gibts keine Ausreden, setze sie auf untauglich !!!"
+#echo ""
+#psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET patauglich = FALSE WHERE g26bis < CURRENT_DATE;"
+#echo ""
+#echo "!!! AGT auf untauglich gesetzt !!!"
+#echo ""
+#echo ""
+#
+#echo "!!! Achtung - Belastungsubung nicht innerhalb diesen oder letzten Jahres !!!"
+#echo ""
+#psql -P pager=off -d $database -U $username -c "SELECT name, vorname, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND EXTRACT(YEAR FROM lastbelastung) NOT IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1);"
+#
+#echo "!!! So gehts nicht, setze sie auf untauglich !!!"
+#echo ""
+#psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET patauglich = FALSE WHERE EXTRACT(YEAR FROM lastbelastung) NOT IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1);"
+#echo "!!! AGT auf untauglich gesetzt !!!"
+#echo ""
+#echo ""
+#
+#echo "+++ Sehr gut, aktuell taugliche AGT (sortiert nach G 26.3 Ablauf) +++"
+#echo ""
+#psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND EXTRACT(YEAR FROM lastbelastung) IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1) AND g26bis > CURRENT_DATE ORDER BY g26bis ASC;"
+#
+#echo "+++ Nicely done, setze AGT auf tauglich +++"
+#echo ""
+#psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET patauglich = TRUE WHERE EXTRACT(YEAR FROM lastbelastung) IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1) AND g26bis > CURRENT_DATE;"
+#echo "+++ AGT auf tauglich gesetzt +++"
+#echo ""
+#echo ""
+#echo "+--+ Aktuell taugliche AGT +--+"
+#psql -P pager=off -d $database -U $username -c "SELECT COUNT(*) FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND patauglich = TRUE;"
