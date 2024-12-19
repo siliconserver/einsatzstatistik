@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# variablen
+### Variables
 hostname=localhost
 username=root
 database=feuerwehr
