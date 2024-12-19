@@ -11,17 +11,70 @@ echo "Wöchentliche Prüfung der Tauglichkeit, G26 und Belastungsübung."
 echo ""
 echo "Die G 26.3 läuft bei folgenden Kameraden innerhalb 3 Monaten ab:"
 echo "(Hier gelistete AGT sollten informiert werden, einen Termin beim Arbeitsmediziner zu vereinbaren. Kostenübernahme von Torsten ist zu beauftragen.)"
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis <= CURRENT_DATE + INTERVAL '3 months';"
+# psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis <= CURRENT_DATE + INTERVAL '3 months';"
+# rewrite patauglich from boolean to char
+psql -P pager=off -d $database -U $username -c "
+SELECT 
+    name AS \"Name\", 
+    vorname AS \"Vorname\", 
+    g26bis AS \"G26 bis\", 
+    CASE 
+        WHEN patauglich = 't' THEN 'ja' 
+        WHEN patauglich = 'f' THEN 'nein' 
+    END AS \"PA tauglich\" 
+FROM 
+    feuerwehr.atemschutz 
+WHERE 
+    agtaktiv = TRUE 
+    AND g26bis <= CURRENT_DATE + INTERVAL '3 months'
+ORDER BY 
+    g26bis ASC;
+"
 
 echo "Die G 26.3 ist bei folgenden Kameraden abgelaufen:"
 echo "(Hier gelistete AGT wurden auf untauglich gesetzt. AGT-Namensschild ist zu entfernen!)"
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis < CURRENT_DATE;"
+# psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis < CURRENT_DATE;"
+# rewrite patauglich from boolean to char
+psql -P pager=off -d $database -U $username -c " 
+SELECT 
+    name AS \"Name\", 
+    vorname AS \"Vorname\", 
+    g26bis AS \"G26 bis\", 
+    CASE 
+        WHEN patauglich = 't' THEN 'ja' 
+        WHEN patauglich = 'f' THEN 'nein' 
+    END AS \"PA tauglich\" 
+FROM 
+    feuerwehr.atemschutz 
+WHERE 
+    agtaktiv = true 
+    AND g26bis < CURRENT_DATE;
+"
 psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET patauglich = FALSE WHERE g26bis < CURRENT_DATE;"
 echo ""
 
 echo "Die Belastungsubung wurde von folgenden AGT nicht innerhalb diesen oder letzten Jahres abgelegt:"
 echo "(Hier gelistete AGT wurden auf untauglich gesetzt. AGT-Namensschild ist zu entfernen!)"
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND EXTRACT(YEAR FROM lastbelastung) NOT IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1);"
+# psql -P pager=off -d $database -U $username -c "SELECT name, vorname, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND EXTRACT(YEAR FROM lastbelastung) NOT IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1);"
+# rewrite patauglich from boolean to char
+psql -P pager=off -d $database -U $username -c " 
+SELECT 
+    name AS \"Name\", 
+    vorname AS \"Vorname\", 
+    lastbelastung AS \"Letzte Belastungsübung\",
+    CASE 
+        WHEN patauglich = 't' THEN 'ja' 
+        WHEN patauglich = 'f' THEN 'nein' 
+    END AS \"PA tauglich\" 
+FROM 
+    feuerwehr.atemschutz 
+WHERE 
+    agtaktiv = true 
+    AND EXTRACT(YEAR FROM lastbelastung) 
+    NOT IN (EXTRACT(YEAR FROM CURRENT_DATE), 
+    EXTRACT(YEAR FROM CURRENT_DATE) - 1)
+    ORDER BY lastbelastung ASC;
+"
 psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET patauglich = FALSE WHERE EXTRACT(YEAR FROM lastbelastung) NOT IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1);"
 echo ""
 
@@ -30,10 +83,49 @@ psql -P pager=off -d $database -U $username -c "UPDATE feuerwehr.atemschutz SET 
 echo ""
 
 echo "Aktuell taugliche AGT (sortiert nach G 26.3 Ablauf):"
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND EXTRACT(YEAR FROM lastbelastung) IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1) AND g26bis > CURRENT_DATE ORDER BY g26bis ASC;"
+# psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND EXTRACT(YEAR FROM lastbelastung) IN (EXTRACT(YEAR FROM CURRENT_DATE), EXTRACT(YEAR FROM CURRENT_DATE) - 1) AND g26bis > CURRENT_DATE ORDER BY g26bis ASC;"
+# rewrite patauglich from boolean to char
+psql -P pager=off -d $database -U $username -c "
+SELECT 
+    name AS \"Name\", 
+    vorname AS \"Vorname\", 
+    g26bis AS \"G26 bis\",
+    lastbelastung AS \"Letzte Belastungsübung\",
+    CASE 
+        WHEN patauglich = 't' THEN 'ja' 
+        WHEN patauglich = 'f' THEN 'nein' 
+    END AS \"PA tauglich\" 
+FROM 
+    feuerwehr.atemschutz 
+WHERE 
+    agtaktiv = TRUE 
+    AND EXTRACT(YEAR FROM lastbelastung) 
+    IN (EXTRACT(YEAR FROM CURRENT_DATE), 
+    EXTRACT(YEAR FROM CURRENT_DATE) - 1) 
+    AND g26bis > CURRENT_DATE 
+    ORDER BY g26bis ASC;
+"
 
 echo "Aktuell untaugliche AGT (sortiert nach G 26.3 Ablauf):"
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND patauglich = FALSE ORDER BY g26bis ASC;"
+# psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND patauglich = FALSE ORDER BY g26bis ASC;"
+# rewrite patauglich from boolean to char
+#psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26bis, lastbelastung, CASE WHEN patauglich = 't' THEN 'ja' WHEN patauglich = 'f' THEN 'nein' END AS patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = TRUE AND patauglich = 'f' ORDER BY g26bis ASC;"
+psql -P pager=off -d $database -U $username -c "
+SELECT 
+    name AS \"Name\", 
+    vorname AS \"Vorname\", 
+    g26bis AS \"G26 bis\",
+    lastbelastung AS \"Letzte Belastungsübung\",
+    CASE 
+        WHEN patauglich = 't' THEN 'ja' 
+        WHEN patauglich = 'f' THEN 'nein' 
+    END AS \"PA tauglich\" 
+FROM 
+    feuerwehr.atemschutz 
+WHERE 
+    agtaktiv = TRUE 
+    AND patauglich = 'f' 
+    ORDER BY g26bis ASC;"
 
 # Commented because the previos queries already display the number of rows.
 # echo "Anzahl aktuell tauglicher AGT:"
