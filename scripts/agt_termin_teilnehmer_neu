@@ -38,7 +38,7 @@ echo ""
 #teilnehmer
 echo "Teilnehmer hinzufügen: "
 PS3='Bitte auswählen: '
-options=("Teilnehmer 1" "Teilnehmer 2" "Teilnehmer 3" "Teilnehmer 4")
+options=("Teilnehmer 1" "Teilnehmer 2" "Teilnehmer 3" "Teilnehmer 4" "Teilnehmer 5" "Teilnehmer 6")
 select teilnehmer in "${options[@]}"
 do
         case $teilnehmer in
@@ -60,6 +60,16 @@ do
                 "Teilnehmer 4")
                         echo "Du hast $teilnehmer ausgewählt."
 			teilnehmer=teilnehmer4
+                        break
+                        ;;
+                "Teilnehmer 5")
+                        echo "Du hast $teilnehmer ausgewählt."
+			teilnehmer=teilnehmer5
+                        break
+                        ;;
+                "Teilnehmer 6")
+                        echo "Du hast $teilnehmer ausgewählt."
+			teilnehmer=teilnehmer6
                         break
                         ;;
                 *) echo "Ungültige Option: $REPLY";;
