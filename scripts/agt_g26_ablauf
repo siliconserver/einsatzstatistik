@@ -6,4 +6,4 @@ username=root
 database=feuerwehr
 d=`date +%Y-%m-%d`
 
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26von, g26bis, patauglich FROM feuerwehr.atemschutz WHERE g26bis > CURRENT_DATE - INTERVAL '3 months';"
+psql -P pager=off -h $hostname -d $database -U $username -c "SELECT name, vorname, g26von, g26bis, patauglich FROM feuerwehr.atemschutz WHERE g26bis > CURRENT_DATE - INTERVAL '3 months';"

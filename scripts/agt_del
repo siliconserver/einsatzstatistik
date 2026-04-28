@@ -21,7 +21,7 @@ echo ""
 echo "Aaah, $vorname $name soll gelöscht werden? Schade, aber na klar!"
 #übersicht eingabe
 echo "Das ist mir über den Kamerad bekannt:"
-psql -P pager=off -d $database -U $username -c "SELECT * FROM $database.atemschutz WHERE vorname = '$vorname' AND name = '$name';"
+psql -P pager=off -h $hostname -d $database -U $username -c "SELECT * FROM $database.atemschutz WHERE vorname = '$vorname' AND name = '$name';"
 echo "--------------------"
 echo ""
 # Frage ob aus DB entfernen
@@ -35,7 +35,7 @@ do
        	  echo "Du hast $save ausgewählt."
        	  echo ""
        	  echo "Lösche $vorname $nachname aus der Datenbank.."
-          psql -P pager=off -d $database -U $username -c "DELETE FROM $database.atemschutz WHERE vorname = '$vorname' AND name = '$name';"
+          psql -P pager=off -h $hostname -d $database -U $username -c "DELETE FROM $database.atemschutz WHERE vorname = '$vorname' AND name = '$name';"
           echo "Kamerad wurde gelöscht!"
           echo "----------------------"
           break

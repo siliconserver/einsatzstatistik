@@ -7,10 +7,10 @@ database=feuerwehr
 d=`date +%Y-%m-%d`
 
 echo "achtung - g26 laeuft innerhalb 3 monate ab"
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26von, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis > CURRENT_DATE - INTERVAL '3 months';"
+psql -P pager=off -h $hostname -d $database -U $username -c "SELECT name, vorname, g26von, g26bis, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND g26bis > CURRENT_DATE - INTERVAL '3 months';"
 
 echo "nachste belastungsübun nicht dieses jahr"
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, nextbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND EXTRACT(YEAR FROM nextbelastung) = EXTRACT(YEAR FROM CURRENT_DATE);"
+psql -P pager=off -h $hostname -d $database -U $username -c "SELECT name, vorname, nextbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND EXTRACT(YEAR FROM nextbelastung) = EXTRACT(YEAR FROM CURRENT_DATE);"
 
 echo "letzte belastungsübung nicht dieses jahr"
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND EXTRACT(YEAR FROM lastbelastung) = EXTRACT(YEAR FROM CURRENT_DATE);"
+psql -P pager=off -h $hostname -d $database -U $username -c "SELECT name, vorname, lastbelastung, patauglich FROM feuerwehr.atemschutz WHERE agtaktiv = true AND EXTRACT(YEAR FROM lastbelastung) = EXTRACT(YEAR FROM CURRENT_DATE);"

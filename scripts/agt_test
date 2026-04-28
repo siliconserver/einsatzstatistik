@@ -6,7 +6,7 @@ username=root
 database=feuerwehr
 d=`date +%Y-%m-%d`
 
-psql -P pager=off -d $database -U $username -c "SELECT name, vorname, g26von, g26bis, patauglich FROM feuerwehr.atemschutz;" -t -A  | while IFS="|" read -r column1 column2 column3 column4 column5; do
+psql -P pager=off -h $hostname -d $database -U $username -c "SELECT name, vorname, g26von, g26bis, patauglich FROM feuerwehr.atemschutz;" -t -A  | while IFS="|" read -r column1 column2 column3 column4 column5; do
 if [ "$column5" = "t" ]; then
 	tauglich=ja
 else
